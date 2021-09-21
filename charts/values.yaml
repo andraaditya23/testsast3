@@ -1,0 +1,43 @@
+# Default values for node projects.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: draft
+  tag: dev
+  pullPolicy: IfNotPresent
+
+# define environment variables here as a map of key: value
+env:
+
+# HorizontalPodAutoscaler
+hpa:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 6
+  cpuTargetAverageUtilization: 80
+  memoryTargetAverageUtilization: 80
+
+service:
+  name: backend-pipeline-security
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 8080
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+probePath: /
+livenessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+readinessProbe:
+  failureThreshold: 1
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1

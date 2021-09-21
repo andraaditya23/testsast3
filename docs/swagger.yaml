@@ -1,0 +1,28 @@
+basePath: /example
+info:
+  contact: {}
+  description: PHAROS Example API
+  title: Example API
+  version: "1.0"
+paths:
+  /v1/profiles:
+    get:
+      consumes:
+      - application/json
+      description: Get entries of all skeletons
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      security:
+      - BearerAuth: []
+      summary: Get entries of all skeletons
+      tags:
+      - Skeleton
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
