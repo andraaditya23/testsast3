@@ -30,6 +30,7 @@ pipeline {
 	stages {
 		stage('Check ENV') {
 			steps{
+				sh "export PATH=/usr/local/bin"
 				echo "PATH is ${env.PATH}"
 			}
 		}
