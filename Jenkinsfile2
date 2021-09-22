@@ -38,6 +38,7 @@ pipeline {
 		}
 		stage('GoLangCI-Lint'){
 			steps{
+				script{
 				try{
 				echo "[*] Running Linter Gosec ..."
 				sh "golangci-lint run --disable-all -E gosec"
@@ -58,7 +59,7 @@ pipeline {
 				echo "[*] Running Linter ErrCheck"
 				sh "golangci-lint run --disable-all -E errcheck"
 				}catch(err){}
-				
+				}
 			}
 		}
 		stage('SAST'){
