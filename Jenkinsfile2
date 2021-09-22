@@ -29,9 +29,9 @@ pipeline {
 	stages {
 		stage('SAST'){
             steps{
+				sh "set +e"
 				echo '[*] Running truffleHog'
                 sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json https://github.com/Kevino135/test > ${TARGET_DIR}/tfhog.result"
-				sh "set +e"
 				echo '[*] Done'
             }
         }
