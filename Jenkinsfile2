@@ -35,8 +35,6 @@ pipeline {
 					echo "[*] Install requirement ..."
 					echo "[*] Installing truffleHog ..."
 					sh "python3 -m pip install trufflehog"
-					echo "[*] Installing jq"
-					sh "apt install jq -y"
 
 					try{
 						sh "set +e"
