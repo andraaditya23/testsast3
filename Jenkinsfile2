@@ -53,11 +53,11 @@ pipeline {
 				try{
 				echo "[*] Running Linter Unused"
 				sh "golangci-lint run --disable-all -E unused"
-				}
+				}catch(err){}
 				try{
 				echo "[*] Running Linter ErrCheck"
 				sh "golangci-lint run --disable-all -E errcheck"
-				}
+				}catch(err){}
 				
 			}
 		}
