@@ -43,8 +43,16 @@ pipeline {
 				}
 				
 				echo "[*] Checking scan result ..."
-				sh "cat ${TARGET_DIR}/tfhog.result | jq '.reason'"
+				sh "cat ${TARGET_DIR}/tfhog.result | jq"
 
+				script{
+					if ( sh "jq .reason ${TARGET_DIR}/tfhog.result" ){
+						echo "    Credential leaked ..."
+					}
+					else{
+						echo "    No credential leaked ..."
+					}
+				}
             }
         }
 	}
