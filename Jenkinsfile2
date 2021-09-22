@@ -28,6 +28,10 @@ pipeline {
 	}
  
 	stages {
+		stage('Check ENV') {
+			echo "PATH is ${env.PATH}"
+		}
+
 		stage('Checkout SCM') {
 			steps {
 				echo '> Checking out the source control ...'
