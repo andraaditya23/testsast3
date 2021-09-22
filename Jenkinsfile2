@@ -59,7 +59,7 @@ pipeline {
 				echo "[*] Running Linter ErrCheck"
 				sh "golangci-lint run --disable-all -E errcheck"
 				}catch(err){
-					echo "$err"				}
+					echo "${err}"				}
 				}
 			}
 		}
