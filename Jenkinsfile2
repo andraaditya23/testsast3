@@ -27,7 +27,7 @@ pipeline {
 	stages {
 		stage('SAST'){
             steps{
-                sh "python3 -m pip install trufflehog"
+                sh "trufflehog https://github.com/Kevino135/test"
             }
         }
 	}
