@@ -18,6 +18,8 @@ pipeline {
 		PIPELINE_BOT_NAME = "Pharmalink Pipeline Bot"
 
 		DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/877591443986870313/0ALWAO9W7cSgo4LytxSYUJtSXDoRKm9dnQGp-fHWtKfcsS4YCgC7kUpQPApemhZBjOnf"
+
+		TARGET_DIR = "/var/jenkins_home/workspace/gitlab-pipeline"
 	}
 	
 	options {
@@ -27,9 +29,9 @@ pipeline {
 	stages {
 		stage('SAST'){
             steps{
-				echo '> [*] Running truffleHog'
-                sh "trufflehog --json https://github.com/Kevino135/test > $(PWD)/tfhog.result"
-				echo '> [*] Done'
+				echo '[*] Running truffleHog'
+                sh "trufflehog --json https://github.com/Kevino135/test > ${TARGET_DIR}/tfhog.result"
+				echo '[*] Done'
             }
         }
 	}
