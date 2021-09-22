@@ -27,9 +27,9 @@ pipeline {
 	stages {
 		stage('SAST'){
             steps{
-				echo '[*] Running truffleHog'
+				echo '> [*] Running truffleHog'
                 sh "trufflehog --json https://github.com/Kevino135/test > $(PWD)/tfhog.result"
-				echo '[*] Done'
+				echo '> [*] Done'
             }
         }
 	}
