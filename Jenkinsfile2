@@ -47,7 +47,6 @@ pipeline {
 				}
 				
 				echo "[*] Checking scan result ..."
-
 				script{
 					TFHOG_RESULT = sh (
 						script: "jq . ${TARGET_DIR}/tfhog.result",
@@ -55,8 +54,16 @@ pipeline {
 					)
 
 				}
-
 				echo "${TFHOG_RESULT}"
+
+				script{
+					if ( TFHOG_RESULT ){
+						echo "[*] Credential leaked ..."
+					}
+					else {
+						echo "[*] No credential leaked ..."
+					}
+				}
 
             }
         }
