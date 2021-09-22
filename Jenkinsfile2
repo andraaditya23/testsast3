@@ -45,9 +45,6 @@ pipeline {
 		}
 		stage('GoLangCI-Lint'){
 			steps{
-				echo "[*] Export GO PATH"
-				sh "export PATH=$PATH:/usr/local/go/bin"
-				sh "go version"
 				echo "[*] Running Linter Gosec ..."
 				sh "golangci-lint run --disable-all -E gosec"
 				echo "[*] Running Linter Deadcode ..."
