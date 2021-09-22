@@ -21,9 +21,8 @@ pipeline {
 
 		TARGET_DIR = "/var/jenkins_home/workspace/gitlab-pipeline"
 
-		script{
-			TFHOG_RESULT = sh "jq . ${TARGET_DIR}/tfhog.result"
-		}
+		TFHOG_RESULT = "(sh 'jq . ${TARGET_DIR}/tfhog.result')"
+		
 	}
 	
 	options {
