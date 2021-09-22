@@ -1,0 +1,50 @@
+pipeline {
+	agent any
+	
+	environment {
+		GO111MODULE = "on"
+
+		PROJECT_ID = "pharos-main"
+		
+		NAME = "backend-pipeline-security"
+		ORG = "pharos"
+
+		DOCKER_REGISTRY = "gcr.io"
+		DOCKER_REGISTRY_URL = "https://gcr.io"
+		DOCKER_REGISTRY_PROJECT_URL = "${DOCKER_REGISTRY}/${PROJECT_ID}"
+		DOCKER_IMAGE_URL = "${DOCKER_REGISTRY_PROJECT_URL}/${NAME}"
+		
+		PIPELINE_BOT_EMAIL = "pharos.bot@gmail.com"
+		PIPELINE_BOT_NAME = "Pharmalink Pipeline Bot"
+
+		DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/877591443986870313/0ALWAO9W7cSgo4LytxSYUJtSXDoRKm9dnQGp-fHWtKfcsS4YCgC7kUpQPApemhZBjOnf"
+	}
+	
+	options {
+		skipDefaultCheckout(true)
+	}
+ 
+	stages {
+		stage('SAST'){
+            steps{
+                sh "python3 -m pip install trufflehog"
+            }
+        }
+	}
+	post {
+		success {
+			build job: 'k8s-blue-sapphire-staging', parameters: [
+				string(name: 'PROJECT_NAME', value: "${env.NAME}"),
+				string(name: 'PROJECT_VERSION', value: "${env.VERSION}")
+			], wait: false
+
+			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			sh "exit 0"
+		}
+
+		regression {
+			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			sh "exit 1"
+		}
+	}
+}
