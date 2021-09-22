@@ -21,7 +21,6 @@ pipeline {
 
 		TARGET_DIR = "/var/jenkins_home/workspace/gitlab-pipeline"
 
-		SCAN_RESULT = {}
 	}
 	
 	options {
@@ -44,11 +43,8 @@ pipeline {
 				}
 				
 				echo "[*] Checking scan result ..."
-				sh "cat ${TARGET_DIR}/tfhog.result | jq"
+				sh "cat ${TARGET_DIR}/tfhog.result | jq '.reason'"
 
-				script{
-					echo "environment.SCAN_RESULT"
-				}
             }
         }
 	}
