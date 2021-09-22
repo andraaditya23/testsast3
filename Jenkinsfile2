@@ -32,15 +32,16 @@ pipeline {
 				script{
 					try{
 						sh "set +e"
-						echo "[*] Running TruffleHog ..."
+						echo "[*] Running truffleHog ..."
 						sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json https://github.com/Kevino135/test > ${TARGET_DIR}/tfhog.result"
 					}
 					catch(err) {
 						echo "Get-Failed: ${err}"
 					}
-					echo "[*] Scanning Done ..."
+					echo "[*] Scanning done ..."
 				}
-				sh "cat ${TARGET_DIR}/tfhog.result"
+				echo "[*] Checking scan result ..."
+				sh "cat ${TARGET_DIR}/tfhog.result | jq"
             }
         }
 	}
