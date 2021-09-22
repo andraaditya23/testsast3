@@ -19,6 +19,7 @@ pipeline {
 
 		DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/877591443986870313/0ALWAO9W7cSgo4LytxSYUJtSXDoRKm9dnQGp-fHWtKfcsS4YCgC7kUpQPApemhZBjOnf"
 
+		TARGET_REPO = "https://github.com/Kevino135/test"
 		TARGET_DIR = "/var/jenkins_home/workspace/gitlab-pipeline"
 	}
 	
@@ -36,9 +37,8 @@ pipeline {
 					sh "python3 -m pip install trufflehog"
 
 					try{
-						sh "set +e"
 						echo "[*] Running truffleHog ..."
-						sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json https://github.com/Kevino135/test > ${TARGET_DIR}/tfhog.result"
+						sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/tfhog.result"
 					}
 					catch(err) {
 						echo "Get-Failed: ${err}"
