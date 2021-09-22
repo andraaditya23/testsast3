@@ -46,7 +46,7 @@ pipeline {
 				sh "cat ${TARGET_DIR}/tfhog.result | jq"
 
 				script{
-					if ( sh (cat /var/jenkins_home/workspace/gitlab-pipeline/tfhog.result | jq) ){
+					if ( sh (jq .reason $(PWD)/tfhog.result ) ){
 						echo "    Credential leaked ..."
 					}
 					else{
