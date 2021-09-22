@@ -21,6 +21,9 @@ pipeline {
 
 		TARGET_DIR = "/var/jenkins_home/workspace/gitlab-pipeline"
 
+		script{
+			TFHOG_RESULT = sh "jq . ${TARGET_DIR}/tfhog.result"
+		}
 	}
 	
 	options {
@@ -51,10 +54,8 @@ pipeline {
 
 
 				echo "[*] Store scan result to variable ..."
-				script{
-					tfhog_result = sh "jq . ${TARGET_DIR}/tfhog.result"
-				}
-				echo "${tfhog_result}"
+				
+				echo "${TFHOG_RESULT}"
 
             }
         }
