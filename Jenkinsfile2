@@ -48,7 +48,13 @@ pipeline {
 				}
 				
 				echo "[*] Checking scan result ..."
-				sh "jq . ${TARGET_DIR}/tfhog.result"
+
+
+				echo "[*] Store scan result to variable ..."
+				script{
+					tfhog_result = sh "jq . ${TARGET_DIR}/tfhog.result"
+				}
+				echo "${tfhog_result}"
 
             }
         }
