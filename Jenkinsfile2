@@ -35,7 +35,7 @@ pipeline {
 					sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json https://github.com/Kevino135/test > ${TARGET_DIR}/tfhog.result"
 				}
 				catch(err) {
-					echo "Failed: $(err)"
+					echo "Failed: ${err}"
 				}
 				echo "[*] Done"
             }
