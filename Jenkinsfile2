@@ -31,6 +31,13 @@ pipeline {
 		stage('SAST'){
             steps{
 				script{
+
+					echo "[*] Install requirement ..."
+					echo "[*] Installing truffleHog ..."
+					sh "python3 -m pip install trufflehog"
+					echo "[*] Installing jq"
+					sh "apt install jq -y"
+
 					try{
 						sh "set +e"
 						echo "[*] Running truffleHog ..."
@@ -43,16 +50,8 @@ pipeline {
 				}
 				
 				echo "[*] Checking scan result ..."
-				sh "cat ${TARGET_DIR}/tfhog.result | jq"
+				sh "jq . ${TARGET_DIR}/tfhog.result"
 
-				script{
-					if ( sh (jq .reason /var/jenkins_home/workspace/gitlab-pipeline/tfhog.result ) ){
-						echo "    Credential leaked ..."
-					}
-					else{
-						echo "    No credential leaked ..."
-					}
-				}
             }
         }
 	}
