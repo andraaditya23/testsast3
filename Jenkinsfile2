@@ -41,7 +41,7 @@ pipeline {
 						sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/tfhog.result"
 					}
 					catch(err) {
-						echo "Get-Failed: ${err}"
+						
 					}
 					echo "[*] Scanning done ..."
 				}
