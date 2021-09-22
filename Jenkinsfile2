@@ -30,13 +30,6 @@ pipeline {
 	}
  
 	stages {
-		stage('Check ENV') {
-			steps{
-				sh "export PATH=/usr/local/bin"
-				echo "PATH is ${env.PATH}"
-			}
-		}
-
 		stage('Checkout SCM') {
 			steps {
 				echo '> Checking out the source control ...'
