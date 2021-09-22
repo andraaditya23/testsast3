@@ -28,6 +28,22 @@ pipeline {
 	}
  
 	stages {
+		stage('Checkout SCM') {
+			steps {
+				echo '> Checking out the source control ...'
+				checkout scm
+			}
+		}
+		stage('GoLangCI-Lint'){
+			steps{
+				echo "[*] Export GO PATH"
+				sh "export PATH=$PATH:/usr/local/go/bin"
+				echo "[*] Running Linter Gosec ..."
+				sh "golangci-lint run --disable-all -E gosec"
+				echo "[*] Running Linter Deadcode ..."
+				sh "golangci-lint run --disable-all -E deadcode"
+			}
+		}
 		stage('SAST'){
             steps{
 				script{
