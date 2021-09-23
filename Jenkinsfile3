@@ -82,18 +82,25 @@ pipeline {
 						returnStdout: true
 					)
 
+					TFHOG_FILEPATH = sh (
+						script: "jq .path ${TARGET_DIR}/tfhog.result"
+					)
+
 				}
 				sh "cat ${TARGET_DIR}/tfhog.result"
 				echo "${TFHOG_RESULT}"
 
 				script{
 					if ( TFHOG_RESULT ){
-						echo "[*] Credential leaked ..."
+						echo "[*] Credential leaked at  ..."
 					}
 					else {
 						echo "[*] No credential leaked ..."
 					}
 				}
+
+				echo "Removing tfhog.result file ..."
+				sh "rm ${TARGET_DIR}/tfhog.result"
             }
         }
 	}
