@@ -59,7 +59,7 @@ pipeline {
 					echo "[*] Running Linter ErrCheck"
 					sh "golangci-lint run --disable-all -E errcheck"
 				}catch(err){
-					echo "${err}"				}
+					echo "${err}"
 				}
 			}
 		}
@@ -74,10 +74,7 @@ pipeline {
 					catch(err) {
 						
 					}
-					echo "[*] Scanning done ..."
 				}
-				
-				echo "[*] Checking scan result ..."
 				script{
 					TFHOG_RESULT = sh (
 						script: "jq . ${TARGET_DIR}/tfhog.result",
