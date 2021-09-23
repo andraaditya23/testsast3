@@ -106,7 +106,7 @@ pipeline {
 					}
 				}
 
-				echo "[*] Removing tfhog.result file ..."
+				echo "[*] Removing [tfhog.result] file ..."
 				sh "rm ${TARGET_DIR}/tfhog.result"
             }
         }
