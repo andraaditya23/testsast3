@@ -63,11 +63,6 @@ pipeline {
 				}
 			}
 		}
-		stage('Check Profile'){
-			steps{
-				sh '${env.GITLAB_JENKINS_TOKEN}'
-			}
-		}
 
 		stage('SAST'){
             steps{
