@@ -95,9 +95,6 @@ pipeline {
 						echo "[*] No credential leaked ..."
 					}
 				}
-
-                echo "[*] Remove existing scan result file (tfhog.result) ..."
-				sh "rm ${TARGET_DIR}/tfhog.result"
             }
         }
 	}
