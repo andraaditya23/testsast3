@@ -23,6 +23,8 @@ pipeline {
 
 		TARGET_REPO = "https://github.com/Kevino135/test"
 		TARGET_DIR = "/var/jenkins_home/workspace/Gitlab-pipeline"
+
+		scannerHome = tool 'sonarqube'
 	}
 	
 	options {
@@ -64,9 +66,7 @@ pipeline {
 			}
 		}
 		stage('Sonarqube') {
-			environment {
-				scannerHome = tool 'sonarqube'
-			}    steps {
+    		steps {
 				withSonarQubeEnv('sonarqube') {
 					sh "${scannerHome}/bin/sonar-scanner"
 				}        timeout(time: 10, unit: 'MINUTES') {
