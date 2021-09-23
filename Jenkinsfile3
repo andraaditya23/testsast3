@@ -64,13 +64,7 @@ pipeline {
 			}
 		}
 
-		stage('Check Command'){
-			steps{
-				sh "locate trufflehog"
-			}
-		}
-
-		stage('SAST'){
+		stage('TruffleHog'){
             steps{
 				script{
 					try{
