@@ -83,7 +83,13 @@ pipeline {
 					)
 
 					TFHOG_FILEPATH = sh (
-						script: "jq .path ${TARGET_DIR}/tfhog.result"
+						script: "jq .path ${TARGET_DIR}/tfhog.result",
+						returnStdout: true
+					)
+
+					TFHOG_ISSUE = sh (
+						script: "jq .reason ${TARGET_DIR}/tfhog.result",
+						returnStdout: true
 					)
 
 				}
@@ -92,7 +98,8 @@ pipeline {
 
 				script{
 					if ( TFHOG_RESULT ){
-						echo "[*] Credential leaked at  ..."
+						echo "[*] Credential leaked at ${TFHOG_FILEPATH} ..."
+						echo "[*] Issue ==> ${TFHOG_ISSUE}"
 					}
 					else {
 						echo "[*] No credential leaked ..."
