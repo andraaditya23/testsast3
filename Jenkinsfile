@@ -39,19 +39,15 @@ pipeline {
 			}
 		}
     stage ('SonarQube Analysis') {
-        environment {
-            scannerHome = tool 'sonarqube'
-        }
-    
-        steps {
-            withSonarQubeEnv ('sonarqube') {
-                sh '${scannerHome}/bin/sonar-scanner'
-                sh 'cat .scannerwork/report-task.txt > /{JENKINS HOME DIRECTORY}/reports/sonarqube-report'
-            }
-            timeout(time: 10, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: true
-            }
-        }
+		environment {
+			scannerHome = tool 'SonarQubeScanner'
+		}    steps {
+			withSonarQubeEnv('sonarqube') {
+				sh "${scannerHome}/bin/sonar-scanner"
+			}        timeout(time: 10, unit: 'MINUTES') {
+				waitForQualityGate abortPipeline: true
+			}
+		}
     }
 		stage('GoLangCI-Lint'){
 			steps{
