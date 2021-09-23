@@ -93,7 +93,6 @@ pipeline {
 					)
 
 				}
-				sh "cat ${TARGET_DIR}/tfhog.result"
 				echo "${TFHOG_RESULT}"
 
 				script{
