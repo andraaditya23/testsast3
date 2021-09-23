@@ -63,6 +63,12 @@ pipeline {
 				}
 			}
 		}
+		stage('Check Profile'){
+			steps{
+				sh 'whoami && pwd'
+			}
+		}
+
 		stage('SAST'){
             steps{
 				script{
