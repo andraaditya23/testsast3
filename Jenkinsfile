@@ -38,19 +38,26 @@ pipeline {
 				checkout scm
 			}
 		}
-    stage ('SonarQube Analysis') {
-		environment {
-			scannerHome = tool 'sonarqube'
-		} 
-		steps {
-			withSonarQubeEnv('sonarqube') {
-				sh "${scannerHome}/bin/sonar-scanner"
+		stage ('SonarQube Analysis') {
+			environment {
+				scannerHome = tool 'sonarqube'
 			} 
-			timeout(time: 10, unit: 'MINUTES') {
-				waitForQualityGate abortPipeline: true
+			steps {
+				withSonarQubeEnv('sonarqube') {
+					sh "${scannerHome}/bin/sonar-scanner"
+				} 
+				timeout(time: 10, unit: 'MINUTES') {
+					waitForQualityGate abortPipeline: true
+				}
 			}
 		}
-    }
+		stage("Dependency Check") {
+			dependencyCheckAnalyzer datadir: 'dependency-check-data', isFailOnErrorDisabled: true, hintsFile: '', includeCsvReports: false, includeHtmlReports: false, includeJsonReports: false, isAutoupdateDisabled: false, outdir: '', scanpath: '', skipOnScmChange: false, skipOnUpstreamChange: false, suppressionFile: '', zipExtensions: ''
+	
+			dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
+		
+			archiveArtifacts allowEmptyArchive: true, artifacts: '**/dependency-check-report.xml', onlyIfSuccessful: true
+	}
 		stage('GoLangCI-Lint'){
 			steps{
 				script{
