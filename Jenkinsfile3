@@ -98,7 +98,7 @@ pipeline {
 
 				script{
 					if ( TFHOG_RESULT ){
-						echo "[*] Credential leaked at ${TFHOG_FILEPATH} ..."
+						echo "[*] Credential leaked at ${TFHOG_FILEPATH}"
 						echo "[*] Issue ==> ${TFHOG_ISSUE}"
 					}
 					else {
@@ -106,7 +106,7 @@ pipeline {
 					}
 				}
 
-				echo "Removing tfhog.result file ..."
+				echo "[*] Removing tfhog.result file ..."
 				sh "rm ${TARGET_DIR}/tfhog.result"
             }
         }
