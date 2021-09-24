@@ -36,7 +36,7 @@ pipeline {
 					env.PROCEED = input message: 'Do you want to proceed the scan? (yes/no)',
 										parameters: [string(defaultValue: 'yes',
 										description: '',
-										name: 'Continue?')]
+										name: 'Continue')]
 				}
 				echo "${env.PROCEED}"
 			}
