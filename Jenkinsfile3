@@ -30,7 +30,7 @@ pipeline {
 	}
  
 	stages {
-		stage('User Input'){
+/*		stage('User Input'){
 			steps{
 				script{
 					env.PROCEED = input message: 'Do you want to proceed the scan? (yes/no)',
@@ -40,11 +40,12 @@ pipeline {
 				}
 			}
 		}
-
+*/
 		stage('TruffleHog'){
-			when{
+/*			when{
 				expression { env.PROCEED == "yes"}
 			}
+*/
             steps{
 				script{
 					try{
