@@ -35,9 +35,13 @@ pipeline {
 				script{
 					env.PROCEED = input message: 'Do you want to proceed the scan? (yes/no)',
 										parameters: [string(defaultValue: 'yes',
-										description: '')]
+										description: '',
+										name: 'Proceed for TruffleHog')]
+					env.RAND = input message: 'Do you want to random?',
+									parameters: [string(defaultValue: 'yes',
+									description: '',
+									name: 'Check for random')]
 				}
-				echo "${env.PROCEED}"
 			}
 		}
 
@@ -88,5 +92,13 @@ pipeline {
 				sh "rm ${TARGET_DIR}/tfhog.result"
             }
         }
+		stage('Random'){
+			when{
+				expression { env.RAND == "yes"}
+			}
+			steps{
+				echo "You got random ..."
+			}
+		}
 	}
 }
