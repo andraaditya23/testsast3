@@ -34,9 +34,8 @@ pipeline {
 			steps{
 				script{
 					env.PROCEED = input message: 'Do you want to proceed the scan?',
-										parameters: [string(defaultValue: 'yes',
 										description: '',
-										name: 'Continue?')]
+										name: 'Proceed or Abort?')]
 				}
 				echo "${env.PROCEED}"
 			}
