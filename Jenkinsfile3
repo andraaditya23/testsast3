@@ -37,9 +37,9 @@ pipeline {
 										parameters: [string(defaultValue: 'yes',
 										description: '',
 										name: 'Proceed or Abort?')]
+				
+					echo "${env.PROCEED}"
 				}
-
-				echo "${env.PROCEED}"
 			}
 		}
 
