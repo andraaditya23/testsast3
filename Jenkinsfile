@@ -53,15 +53,10 @@ pipeline {
 		}
         stage ('OWASP Dependency-Check Vulnerabilities') {
             steps {
-                dependencyCheck additionalArguments: ''' 
-                    -o "./" 
-                    -s "./"
-                    -f "ALL" 
-                    --prettyPrint''', odcInstallation: 'OWASP-DC'
-
-                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+				dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
+				dependencyCheckPublisher pattern: 'dependency-check.xml'
             }
-        }     
+        }
 		stage('GoLangCI-Lint'){
 			steps{
 				script{
