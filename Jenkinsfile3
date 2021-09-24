@@ -33,16 +33,19 @@ pipeline {
 		stage('User Input'){
 			steps{
 				script{
-					env.PROCEED = input message: 'Do you want to proceed the scan?',
-										parameters: [string(
+					env.PROCEED = input message: 'Do you want to proceed the scan? (yes/no)',
+										parameters: [string(defaultValue: 'yes',
 										description: '',
-										name: 'Proceed or Abort?')]
+										name: 'Continue?')]
 				}
 				echo "${env.PROCEED}"
 			}
 		}
 
 		stage('TruffleHog'){
+			when{
+				expression { env.PROCEED == "yes"}
+			}
             steps{
 				script{
 					try{
