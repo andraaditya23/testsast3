@@ -38,8 +38,9 @@ pipeline {
 										description: '',
 										name: 'Proceed or Abort?')]
 				}
+
+				echo "${env.PROCEED}"
 			}
-			echo "${env.PROCEED}"
 		}
 
 		stage('TruffleHog'){
