@@ -24,7 +24,6 @@ pipeline {
         TARGET_REPO = "https://oauth2:WD6UQHAzARwsvWr_-N_z@gitlab.pharmalink.id/rnd/backend-pipeline-security"
         TARGET_DIR = "/var/jenkins_home/workspace/gitlab-scanner"
 
-        scannerHome = tool 'sonarqube'
     }
     
     options {
