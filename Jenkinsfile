@@ -86,7 +86,7 @@ pipeline {
             steps{
                 script{
                     FILENAME = sh(
-                        script: "date +'%Y-%m-%d_%T'",
+                        script: sh "date +'%Y-%m-%d_%T'",
                         returnStdout: true
                     )
                 }
