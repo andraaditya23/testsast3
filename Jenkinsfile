@@ -22,7 +22,8 @@ pipeline {
 
         DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/877591443986870313/0ALWAO9W7cSgo4LytxSYUJtSXDoRKm9dnQGp-fHWtKfcsS4YCgC7kUpQPApemhZBjOnf"
 
-        TARGET_REPO = "https://oauth2:bzbWesryoBRJdXPJjo1h@gitlab.pharmalink.id/rnd/backend-pipeline-security"
+        GITLAB_ACCESS_TOKEN = credentials('gitlab_token')
+        TARGET_REPO = "https://oauth2:${GITLAB_ACCESS_TOKEN}@gitlab.pharmalink.id/rnd/backend-pipeline-security"
         TARGET_DIR = "/var/jenkins_home/workspace/gitlab-scanner"
 
     }
