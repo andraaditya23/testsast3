@@ -84,12 +84,13 @@ pipeline {
         }
         stage('Create Reporting'){
             steps{
+                echo '[*] Create report ...'
                     script {
                         def now = new Date()
-                        def filename =  now.format("ddMMYY_HHmm", TimeZone.getTimeZone('UTC'))
+                        def filename = now.format("ddMMYY_HHmm", TimeZone.getTimeZone('UTC'))
+                        sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${filename}'
                     }
-                echo '[*] Create report ...'
-                sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${filename}'
+                
             }
         }        
     }
