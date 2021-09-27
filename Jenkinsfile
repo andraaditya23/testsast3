@@ -86,7 +86,7 @@ pipeline {
             steps{
                 
                 echo '[*] Create report ...'
-                echo '${currentBuild.startTimeInMillis}'
+                echo '${BUILD_ID}'
             }
         }        
     }
