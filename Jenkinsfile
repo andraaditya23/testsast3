@@ -85,10 +85,7 @@ pipeline {
         stage('Create Reporting'){
             steps{
                 script{
-                    FILENAME = sh (
-						script: "date +'%Y-%m-%d_%T'",
-						returnStdout: true
-					)
+                    FILENAME = $(date +'%Y-%m-%d_%T')
                 }
                 
                 echo '[*] Create report ...'
