@@ -86,10 +86,10 @@ pipeline {
             steps{
                     script {
                         def now = new Date()
-                        println now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+                        def filename =  now.format("ddMMYY_HHmm", TimeZone.getTimeZone('UTC'))
                     }
                 echo '[*] Create report ...'
-                echo '${ENV, var="BUILD_ID"}'
+                sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${filename}'
             }
         }        
     }
