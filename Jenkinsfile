@@ -25,7 +25,7 @@ pipeline {
         GITLAB_ACCESS_TOKEN = credentials('gitlab_token')
         GITLAB_CREDS = credentials('2')
         TARGET_REPO = "https://${GITLAB_CREDS}@gitlab.pharmalink.id/rnd/backend-pipeline-security"
-        TARGET_DIR = "/var/jenkins_home/workspace/gitlab-scanner"
+        TARGET_DIR = credentials('pathHome')
     }
     
     options {
