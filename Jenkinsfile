@@ -35,6 +35,7 @@ pipeline {
             steps {
                 echo '> Checking out the source control ...'
                 checkout scm
+                sh "git log -1 --pretty=format:'%an'"
             }
         }
         stage ('OWASP Dependency-Check Vulnerabilities') {
