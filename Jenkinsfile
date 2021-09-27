@@ -41,24 +41,8 @@ pipeline {
             steps{
                 script{
                 try{
-                    echo "[*] Running Linter Gosec ..."
-                    sh "golangci-lint run --disable-all -E gosec"
-                }catch(err){}
-                try{
-                    echo "[*] Running Linter Deadcode ..."
-                    sh "golangci-lint run --disable-all -E deadcode"
-                }catch(err){}
-                try{
-                    echo "[*] Running Linter StaticCheck"
-                    sh "golangci-lint run --disable-all -E staticcheck"
-                }catch(err){}
-                try{
-                    echo "[*] Running Linter Unused"
-                    sh "golangci-lint run --disable-all -E unused"
-                }catch(err){}
-                try{
                     echo "[*] Running Linter ErrCheck"
-                    sh "golangci-lint run --disable-all -E errcheck > ${TARGET_DIR}/rawJson/errcheck.json"
+                    sh "golangci-lint run --disable-all -E errcheck --out-format json > ${TARGET_DIR}/rawJson/errcheck.json"
                 }catch(err){
                     echo "${err}"               }
                 }
@@ -96,6 +80,18 @@ pipeline {
                     }
                 }
 
+            }
+        }
+        stage('Create Reporting'){
+            steps{
+                script{
+                    DATE = sh(
+                        script: 'date +"%Y-%m-%d_%T"',
+                        returnStdout: true
+                    )
+                }
+                echo '[*] Create report ...'
+                sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${DATE}.report'
             }
         }        
     }
