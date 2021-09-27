@@ -85,14 +85,14 @@ pipeline {
         stage('Create Reporting'){
             steps{
                 script{
-                    DATE = sh(
-                        script: 'date +"%Y-%m-%d_%T"',
+                    FILENAME = sh(
+                        script: "date +'%Y-%m-%d_%T'",
                         returnStdout: true
                     )
                 }
                 echo '[*] Create report ...'
-                echo '${DATE}'
-                sh 'python3 ${TARGET_DIR}/convert.py > "${TARGET_DIR}/beautyJson/${DATE}.log"'
+                echo '${FILENAME}'
+                sh 'python3 ${TARGET_DIR}/convert.py > "${TARGET_DIR}/beautyJson/${FILENAME}.log"'
             }
         }        
     }
