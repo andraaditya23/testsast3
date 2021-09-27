@@ -35,7 +35,6 @@ pipeline {
             steps {
                 echo '> Checking out the source control ...'
                 checkout scm
-                echo "${GITLAB_TOKEN}"
             }
         }
         stage('GoLangCI-Lint'){
