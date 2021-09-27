@@ -88,8 +88,8 @@ pipeline {
                     script {
                         def now = new Date()
                         env.FILENAME = now.format("ddMMYY_HHmm", TimeZone.getTimeZone('UTC'))
-                        sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${env.FILENAME}'
                     }
+                    sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${FILENAME}'
                 
             }
         }        
