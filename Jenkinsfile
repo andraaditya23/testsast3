@@ -36,7 +36,6 @@ pipeline {
                 echo '> Checking out the source control ...'
                 checkout scm
             }
-        }
-        
+        }        
     }
 }
