@@ -84,7 +84,10 @@ pipeline {
         }
         stage('Create Reporting'){
             steps{
-                
+                    script {
+                        def now = new Date()
+                        println now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+                    }
                 echo '[*] Create report ...'
                 echo '${BUILD_ID}'
             }
