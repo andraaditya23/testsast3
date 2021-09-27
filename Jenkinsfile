@@ -84,12 +84,9 @@ pipeline {
         }
         stage('Create Reporting'){
             steps{
-                script{
-                    FILENAME = $(date +'%Y-%m-%d_%T')
-                }
                 
                 echo '[*] Create report ...'
-                sh 'date +"%Y-%m-%d_%T"'
+                sh '${currentBuild.startTimeInMillis}'
                 echo '${FILENAME}'
                 sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${FILENAME}'
             }
