@@ -91,6 +91,7 @@ pipeline {
                     )
                 }
                 echo '[*] Create report ...'
+                echo '${DATE}'
                 sh 'python3 ${TARGET_DIR}/convert.py > "${TARGET_DIR}/beautyJson/${DATE}.log"'
             }
         }        
