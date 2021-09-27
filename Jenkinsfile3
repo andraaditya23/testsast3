@@ -70,7 +70,10 @@ pipeline {
 				echo "${TFHOG_RESULT}"
 				echo "${FILENAME}"
 
-				echo "[*] Removing [tfhog.result] file ..."
+				echo "Create report"
+				sh "python3 ${TARGET_DIR}/convert.py > $FILENAME.report"
+
+				echo "[*] Removing [tfhog.json] file ..."
 				sh "rm ${TARGET_DIR}/tfhog.json"
             }
         }
