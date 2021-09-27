@@ -89,7 +89,7 @@ pipeline {
                         println now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
                     }
                 echo '[*] Create report ...'
-                echo '${BUILD_ID}'
+                echo '${ENV, var="BUILD_ID"}'
             }
         }        
     }
