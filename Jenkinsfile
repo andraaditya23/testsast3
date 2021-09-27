@@ -23,7 +23,7 @@ pipeline {
         DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/877591443986870313/0ALWAO9W7cSgo4LytxSYUJtSXDoRKm9dnQGp-fHWtKfcsS4YCgC7kUpQPApemhZBjOnf"
 
         GITLAB_ACCESS_TOKEN = credentials('gitlab_token')
-        GITLAB_CREDS = credentials('gitlab-ken')
+        GITLAB_CREDS = credentials('2')
         TARGET_REPO = "https://${GITLAB_CREDS}@gitlab.pharmalink.id/rnd/backend-pipeline-security"
         TARGET_DIR = "/var/jenkins_home/workspace/gitlab-scanner"
     }
