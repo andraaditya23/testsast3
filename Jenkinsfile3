@@ -50,43 +50,28 @@ pipeline {
 				script{
 					try{
 						echo "[*] Running truffleHog ..."
-						sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/tfhog.result"
+						sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/tfhog.json"
 					}
 					catch(err) {
 						
 					}
 				}
 				script{
+					FILENAME = sh (
+						script: "date +'%Y-%m-%d_%T'",
+						returnStdout: true
+					)
+
 					TFHOG_RESULT = sh (
-						script: "jq . ${TARGET_DIR}/tfhog.result",
+						script: "jq . ${TARGET_DIR}/tfhog.json",
 						returnStdout: true
 					)
-
-					TFHOG_FILEPATH = sh (
-						script: "jq .path ${TARGET_DIR}/tfhog.result",
-						returnStdout: true
-					)
-
-					TFHOG_ISSUE = sh (
-						script: "jq .reason ${TARGET_DIR}/tfhog.result",
-						returnStdout: true
-					)
-
 				}
 				echo "${TFHOG_RESULT}"
-
-				script{
-					if ( TFHOG_RESULT ){
-						echo "[*] Credential leaked at ${TFHOG_FILEPATH}"
-						echo "[*] Issue ==> ${TFHOG_ISSUE}"
-					}
-					else {
-						echo "[*] No credential leaked ..."
-					}
-				}
+				echo "${FILENAME}"
 
 				echo "[*] Removing [tfhog.result] file ..."
-				sh "rm ${TARGET_DIR}/tfhog.result"
+				sh "rm ${TARGET_DIR}/tfhog.json"
             }
         }
 	}
