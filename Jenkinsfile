@@ -86,9 +86,7 @@ pipeline {
             steps{
                 
                 echo '[*] Create report ...'
-                sh '${currentBuild.startTimeInMillis}'
-                echo '${FILENAME}'
-                sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${FILENAME}'
+                echo '${currentBuild.startTimeInMillis}'
             }
         }        
     }
