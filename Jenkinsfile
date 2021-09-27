@@ -61,7 +61,7 @@ pipeline {
                 }catch(err){}
                 try{
                     echo "[*] Running Linter ErrCheck"
-                    sh "golangci-lint run --disable-all -E errcheck"
+                    sh "golangci-lint run --disable-all -E errcheck > ${TARGET_DIR}/rawJson/errcheck.json"
                 }catch(err){
                     echo "${err}"               }
                 }
@@ -72,7 +72,7 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running truffleHog ..."
-                        sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/tfhog.result"
+                        sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/rawJson/tfhog.json"
                     }
                     catch(err) {
                         
@@ -83,7 +83,7 @@ pipeline {
                 echo "[*] Checking scan result ..."
                 script{
                     TFHOG_RESULT = sh (
-                        script: "jq . ${TARGET_DIR}/tfhog.result",
+                        script: "jq . ${TARGET_DIR}/rawJson/tfhog.json",
                         returnStdout: true
                     )
 
@@ -99,8 +99,6 @@ pipeline {
                     }
                 }
 
-                echo "[*] Remove existing scan result file (tfhog.result) ..."
-                sh "rm ${TARGET_DIR}/tfhog.result"
             }
         }        
     }
