@@ -23,7 +23,7 @@ pipeline {
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
         WORKSPACE = '/tmp/workspace/pi-rnd-backend-pipeline-security'
-        go = '/usr/local/go/bin/go'
+        PATH = '/usr/local/go/bin/go'
     }
     
     options {
@@ -36,9 +36,10 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Random'){
+        stage('Install Library'){
             steps{
-                sh 'ls -la /usr/local/trufflehog/'
+                echo '[*] Installing TruffleHog ...'
+                sh 'pip3 install trufflehog'
             }
         }
         stage('GoLangCI-Lint'){
@@ -46,8 +47,6 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running Linter ErrCheck"
-                        sh 'alias go="/usr/local/go/bin/go"'
-                        sh "go version"
                         sh "${GOLANGCI_DIR}/bin/golangci-lint run --disable-all -E errcheck --out-format json --new-from-rev=HEAD~ > ${WORKSPACE}/errcheck.json"
                     }catch(err){
                         echo "${err}"               
