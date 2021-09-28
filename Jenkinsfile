@@ -38,6 +38,7 @@ pipeline {
         }
         stage('Random'){
             steps{
+                echo '[*] Random'
                 sh 'sudo -l'
             }
         }
