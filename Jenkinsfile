@@ -22,6 +22,7 @@ pipeline {
         TARGET_REPO = "https://oauth2:hvE2MzrZzH6wnFyEDcjS@gitlab.pharmalink.id/rnd/backend-pipeline-security"
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
+        PATH='/usr/local/go/bin'
     }
     
     options {
