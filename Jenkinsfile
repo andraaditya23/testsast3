@@ -95,4 +95,14 @@ pipeline {
             }
         }        
     }
+    post{
+        always{
+            emailext body: ,
+            recipientProviders: [[$class:'DevelopersRecipientProvider'],[$class:'RequesterRecipientProvider']],           subject: 'Report - ${env.FILENAME}'
+        }
+    }
+}
+
+        }
+    }
 }
