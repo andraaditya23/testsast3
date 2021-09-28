@@ -27,7 +27,6 @@ pipeline {
     
     options {
         skipDefaultCheckout(true)
-        ansiColor('xterm')
     }
     stages {
         stage('Checkout SCM') {
