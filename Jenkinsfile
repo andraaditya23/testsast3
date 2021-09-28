@@ -103,7 +103,7 @@ pipeline {
     }
     post{
         success{
-            emailext body: ,
+            emailext body: ${FILE_CONTENT},
             recipientProviders: [[$class:'DevelopersRecipientProvider'],[$class:'RequesterRecipientProvider']],           subject: 'Report - ${FILENAME}'
         }
         regression{
