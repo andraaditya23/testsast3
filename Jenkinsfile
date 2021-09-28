@@ -3,7 +3,9 @@ pipeline {
     tools {
         go 'go-1.17'
     }
-    
+    options {
+        ansiColor('xterm')
+    }
     environment {
         GO111MODULE = "on"
 
