@@ -72,6 +72,7 @@ pipeline {
                     catch(err) {
                         
                     }
+                    sh 'ls -la'
                     sh 'cat tfhog.json'
                     echo "[*] Scanning done ..."
                 }
