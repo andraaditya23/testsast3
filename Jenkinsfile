@@ -20,7 +20,9 @@ pipeline {
         DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/877591443986870313/0ALWAO9W7cSgo4LytxSYUJtSXDoRKm9dnQGp-fHWtKfcsS4YCgC7kUpQPApemhZBjOnf"
 
         TARGET_REPO = "https://oauth2:hvE2MzrZzH6wnFyEDcjS@gitlab.pharmalink.id/rnd/backend-pipeline-security"
-        TARGET_DIR = '/usr/local/trufflehog/'
+        TFHOG_DIR = '/usr/local/trufflehog'
+        GOLANGCI_DIR = '/usr/local/golangci-lint'
+        WORKSPACE = '/tmp/workspace/pi-rnd-backend-pipeline-security'
     }
     
     options {
@@ -36,12 +38,12 @@ pipeline {
         stage('GoLangCI-Lint'){
             steps{
                 script{
-                    sh 'alias go="/usr/local/go/bin/go"'
-                try{
-                    echo "[*] Running Linter ErrCheck"
-                    sh "golangci-lint run --disable-all -E errcheck --out-format json --new-from-rev=HEAD~ > ${TARGET_DIR}/rawJson/errcheck.json"
-                }catch(err){
-                    echo "${err}"               }
+                    try{
+                        echo "[*] Running Linter ErrCheck"
+                        sh "${GOLANGCI_DIR}/bin/golangci-lint run --disable-all -E errcheck --out-format json --new-from-rev=HEAD~ > ${WORKSPACE}/errcheck.json"
+                    }catch(err){
+                        echo "${err}"               
+                    }
                 }
             }
         }
@@ -50,7 +52,7 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running truffleHog ..."
-                        sh "${TARGET_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/rawJson/tfhog.json"
+                        sh "${TARGET_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > ${WORKSPACE}/tfhog.json"
                     }
                     catch(err) {
                         
@@ -66,10 +68,10 @@ pipeline {
                     def now = new Date()
                     env.FILENAME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
                 }
-                sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${FILENAME}'
+                sh 'python3 ${TFHOG_DIR}/convert.py > ${WORKSPACE}/${FILENAME}'
                 script{
                     env.FILE_CONTENT = sh (
-                        script: "cat ${TARGET_DIR}/beautyJson/${FILENAME}"
+                        script: "cat ${TFHOG_DIR}/${FILENAME}"
                     )
                 }
                 echo '${FILE_CONTENT}'
