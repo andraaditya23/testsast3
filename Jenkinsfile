@@ -38,6 +38,7 @@ pipeline {
         }
         stage('GoLangCI-Lint'){
             steps{
+                sh 'ls /home/'
                 script{
                     try{
                         echo "[*] Running Linter ErrCheck"
