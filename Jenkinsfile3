@@ -30,6 +30,7 @@ pipeline {
         stage('GoLangCI-Lint'){
             steps{
                 script{
+                    sh "echo $PATH"
                 try{
                     echo "[*] Running Linter Gosec ..."
                     sh "golangci-lint run --disable-all -E gosec"
