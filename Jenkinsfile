@@ -73,6 +73,7 @@ pipeline {
                     catch(err) {
                         
                     }
+                    sh 'ls ${WORKSPACE}'
                     echo "[*] Scanning done ..."
                 }
             }
