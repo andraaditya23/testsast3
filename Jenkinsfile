@@ -22,7 +22,6 @@ pipeline {
         TARGET_REPO = "https://oauth2:hvE2MzrZzH6wnFyEDcjS@gitlab.pharmalink.id/rnd/backend-pipeline-security"
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
-        WORKSPACE = '/tmp/workspace/pi-rnd-backend-pipeline-security'
     }
     
     options {
@@ -39,6 +38,16 @@ pipeline {
             steps{
                 echo '[*] Installing TruffleHog ...'
                 sh 'pip3 install trufflehog'
+            }
+        }
+        stage('Declarative Variable'){
+            steps{
+                script{
+                    env.WORKSPACE = sh (
+                        script: "pwd"
+                    )
+                }
+                echo "${WORKSPACE}"
             }
         }
         stage('GoLangCI-Lint'){
