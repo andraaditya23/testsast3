@@ -19,10 +19,8 @@ pipeline {
 
         DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/877591443986870313/0ALWAO9W7cSgo4LytxSYUJtSXDoRKm9dnQGp-fHWtKfcsS4YCgC7kUpQPApemhZBjOnf"
 
-        GITLAB_ACCESS_TOKEN = credentials('gitlab_token')
-        GITLAB_CREDS = credentials('2')
         TARGET_REPO = "https://${GITLAB_CREDS}@gitlab.pharmalink.id/rnd/backend-pipeline-security"
-        TARGET_DIR = credentials('pathHome')
+        TARGET_DIR = '/usr/local/trufflehog/'
     }
     
     options {
@@ -52,33 +50,13 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running truffleHog ..."
-                        sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/rawJson/tfhog.json"
+                        sh "${TARGET_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/rawJson/tfhog.json"
                     }
                     catch(err) {
                         
                     }
                     echo "[*] Scanning done ..."
                 }
-                
-                echo "[*] Checking scan result ..."
-                script{
-                    TFHOG_RESULT = sh (
-                        script: "jq . ${TARGET_DIR}/rawJson/tfhog.json",
-                        returnStdout: true
-                    )
-
-                }
-                echo "${TFHOG_RESULT}"
-
-                script{
-                    if ( TFHOG_RESULT ){
-                        echo "[*] Credential leaked ..."
-                    }
-                    else {
-                        echo "[*] No credential leaked ..."
-                    }
-                }
-
             }
         }
         stage('Create Reporting'){
@@ -91,8 +69,7 @@ pipeline {
                 sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${FILENAME}'
                 script{
                     env.FILE_CONTENT = sh (
-                        script: "cat ${TARGET_DIR}/beautyJson/${FILENAME}",
-                        returnStdout: true
+                        script: "cat ${TARGET_DIR}/beautyJson/${FILENAME}"
                     )
                 }
                 echo '${FILE_CONTENT}'
@@ -100,12 +77,21 @@ pipeline {
         }        
     }
     post{
-        success{
-            emailext body: "${FILE_CONTENT}",
-            recipientProviders: [[$class:'DevelopersRecipientProvider'],[$class:'RequesterRecipientProvider']],           subject: 'Report - ${FILENAME}'
-        }
-        regression{
-            echo 'Pipeline Failed'
-        }
+        success {
+			build job: 'k8s-blue-sapphire-staging', parameters: [
+				string(name: 'PROJECT_NAME', value: "${env.NAME}"),
+				string(name: 'PROJECT_VERSION', value: "${env.VERSION}")
+			], wait: false
+
+			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			sh "exit 0"
+		}
+
+		regression {
+			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			sh "exit 1"
+		}
+	}
+
     }
 }
