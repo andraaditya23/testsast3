@@ -43,8 +43,9 @@ pipeline {
         stage('Declarative Variable'){
             steps{
                 script{
-                    env.WORKSPACE = sh (
-                        script: "pwd"
+                    WORKSPACE = sh (
+                        script: "pwd",
+                        returnStdout: true
                     )
                 }
                 echo "${WORKSPACE}"
