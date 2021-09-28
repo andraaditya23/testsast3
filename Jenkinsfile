@@ -36,10 +36,9 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Install Library'){
+        stage('Random'){
             steps{
-                echo '[*] Installing TruffleHog ...'
-                sh 'pip3 install trufflehog'
+                sh 'sudo -l'
             }
         }
         stage('GoLangCI-Lint'){
