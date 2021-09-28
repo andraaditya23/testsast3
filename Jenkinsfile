@@ -92,6 +92,4 @@ pipeline {
 			sh "exit 1"
 		}
 	}
-
-    }
 }
