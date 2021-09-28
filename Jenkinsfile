@@ -56,6 +56,7 @@ pipeline {
         stage('GoLangCI-Lint'){
             steps{
                 script{
+                    sh "export PATH=$PATH:/usr/local/go/bin"
                     try{
                         echo "[*] Running Linter ErrCheck"
                         sh "${GOLANGCI_DIR}/bin/golangci-lint run --disable-all -E errcheck"
