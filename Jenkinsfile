@@ -47,6 +47,7 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running Linter ErrCheck"
+                        sh 'alias go="/usr/local/go/bin/go"'
                         sh "go version"
                         sh "${GOLANGCI_DIR}/bin/golangci-lint run --disable-all -E errcheck --out-format json --new-from-rev=HEAD~ > ${WORKSPACE}/errcheck.json"
                     }catch(err){
