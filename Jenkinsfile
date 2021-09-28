@@ -3,9 +3,6 @@ pipeline {
     tools {
         go 'go-1.17'
     }
-    options {
-        ansiColor('xterm')
-    }
     environment {
         GO111MODULE = "on"
 
@@ -32,6 +29,7 @@ pipeline {
     
     options {
         skipDefaultCheckout(true)
+        ansiColor('xterm')
     }
     stages {
         stage('Checkout SCM') {
