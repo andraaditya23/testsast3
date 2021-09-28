@@ -61,7 +61,7 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running truffleHog ..."
-                        sh "${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > ${WORKSPACE}/tfhog.json"
+                        sh "${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json . > ${WORKSPACE}/tfhog.json"
                     }
                     catch(err) {
                         
