@@ -27,25 +27,6 @@ pipeline {
 	}
  
 	stages {
-stage ('OWASP Dependency-Check Vulnerabilities') {
-            steps {
-                dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
-                dependencyCheckPublisher pattern: '/var/jenkins_home/workspace/Gitlab-pipeline/dependency-check-report.html'
-            }
-        }
-        stage ('SonarQube Analysis') {
-            environment {
-                scannerHome = tool 'sonarqube'
-            } 
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                } 
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
         stage('GoLangCI-Lint'){
             steps{
                 script{
