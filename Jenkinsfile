@@ -41,7 +41,6 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running Linter ErrCheck"
-                        sh "whoami"
                         sh "${GOLANGCI_DIR}/bin/golangci-lint run --disable-all -E errcheck --out-format json --new-from-rev=HEAD~ > ${WORKSPACE}/errcheck.json"
                     }catch(err){
                         echo "${err}"               
