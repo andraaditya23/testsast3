@@ -67,13 +67,12 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running truffleHog ..."
-                        sh "${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json . > ${WORKSPACE}/tfhog.json"
+                        sh "${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ./ > tfhog.json"
                     }
                     catch(err) {
                         
                     }
-                    sh 'cat ${WORKSPACE}/tfhog.json'
-                    sh 'rm ${WORKSPACE}/28-09*'
+                    sh 'cat tfhog.json'
                     echo "[*] Scanning done ..."
                 }
             }
