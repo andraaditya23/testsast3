@@ -23,7 +23,6 @@ pipeline {
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
         WORKSPACE = '/tmp/workspace/pi-rnd-backend-pipeline-security'
-        PATH = '/usr/local/go/bin/go'
     }
     
     options {
@@ -39,7 +38,7 @@ pipeline {
         stage('Random'){
             steps{
                 echo '[*] Random'
-                sh 'ls -la /home/pharos_software/.local'
+                sh 'ls -la /home/'
             }
         }
         stage('GoLangCI-Lint'){
