@@ -54,7 +54,7 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running truffleHog ..."
-                        sh "${TARGET_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > ${WORKSPACE}/tfhog.json"
+                        sh "${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > ${WORKSPACE}/tfhog.json"
                     }
                     catch(err) {
                         
@@ -70,10 +70,10 @@ pipeline {
                     def now = new Date()
                     env.FILENAME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
                 }
-                sh 'python3 ${TFHOG_DIR}/convert.py > ${WORKSPACE}/${FILENAME}'
+                sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${FILENAME}'
                 script{
                     env.FILE_CONTENT = sh (
-                        script: "cat ${TFHOG_DIR}/${FILENAME}"
+                        script: "cat ${WORKSPACE}/${FILENAME}"
                     )
                 }
                 echo '${FILE_CONTENT}'
