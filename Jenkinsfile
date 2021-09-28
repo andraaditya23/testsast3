@@ -85,13 +85,7 @@ pipeline {
                     def now = new Date()
                     env.FILENAME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
                 }
-                sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${FILENAME}'
-                script{
-                    env.FILE_CONTENT = sh (
-                        script: "cat ${WORKSPACE}/${FILENAME}"
-                    )
-                }
-                echo '${FILE_CONTENT}'
+                sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE}'
             }
         }        
     }
