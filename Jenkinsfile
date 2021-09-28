@@ -92,7 +92,7 @@ pipeline {
                 }
                 sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${FILENAME}'
                 script{
-                    FILE_CONTENT = sh (
+                    env.FILE_CONTENT = sh (
                         script: "cat ${TARGET_DIR}/beautyJson/${FILENAME}",
                         returnStdout: true
                     )
