@@ -38,8 +38,9 @@ pipeline {
         stage('GoLangCI-Lint'){
             steps{
                 script{
-                    sh 'alias go="/usr/local/go/bin/go"'
                     try{
+                        sh 'alias go=/usr/local/go/bin/go'
+                        sh 'export PATH=$PATH:/usr/local/go/bin/go'
                         echo "[*] Running Linter ErrCheck"
                         sh "${GOLANGCI_DIR}/bin/golangci-lint run --disable-all -E errcheck --out-format json --new-from-rev=HEAD~ > ${WORKSPACE}/errcheck.json"
                     }catch(err){
