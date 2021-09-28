@@ -39,7 +39,7 @@ pipeline {
         stage('Random'){
             steps{
                 echo '[*] Random'
-                sh 'sudo -l'
+                sh 'ls -la /home/pharos_software/.local'
             }
         }
         stage('GoLangCI-Lint'){
