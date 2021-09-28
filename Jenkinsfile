@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    tools {
-        go 'go-1.17'
-    }
+    
     environment {
         GO111MODULE = "on"
 
@@ -41,6 +39,7 @@ pipeline {
         stage('GoLangCI-Lint'){
             steps{
                 script{
+                    sh 'alias go="/usr/local/go/bin/go"'
                 try{
                     echo "[*] Running Linter ErrCheck"
                     sh "golangci-lint run --disable-all -E errcheck --out-format json --new-from-rev=HEAD~ > ${TARGET_DIR}/rawJson/errcheck.json"
