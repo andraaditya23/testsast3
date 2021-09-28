@@ -23,6 +23,7 @@ pipeline {
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
         WORKSPACE = '/tmp/workspace/pi-rnd-backend-pipeline-security'
+        PATH = "/usr/local/go/bin/go"
     }
     
     options {
@@ -39,8 +40,6 @@ pipeline {
             steps{
                 script{
                     try{
-                        sh 'alias go=/usr/local/go/bin/go'
-                        sh 'export PATH=$PATH:/usr/local/go/bin/go'
                         echo "[*] Running Linter ErrCheck"
                         sh "${GOLANGCI_DIR}/bin/golangci-lint run --disable-all -E errcheck --out-format json --new-from-rev=HEAD~ > ${WORKSPACE}/errcheck.json"
                     }catch(err){
