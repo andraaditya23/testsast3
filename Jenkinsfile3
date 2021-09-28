@@ -27,51 +27,86 @@ pipeline {
 	}
  
 	stages {
-/*		stage('User Input'){
-			steps{
-				script{
-					env.PROCEED = input message: 'Do you want to proceed the scan? (yes/no)',
-										parameters: [string(defaultValue: 'yes',
-										description: '',
-										name: 'Proceed for TruffleHog')]
-				}
-			}
-		}
-*/
-		stage('TruffleHog'){
-/*			when{
-				expression { env.PROCEED == "yes"}
-			}
-*/
+stage ('OWASP Dependency-Check Vulnerabilities') {
+            steps {
+                dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
+                dependencyCheckPublisher pattern: '/var/jenkins_home/workspace/Gitlab-pipeline/dependency-check-report.html'
+            }
+        }
+        stage ('SonarQube Analysis') {
+            environment {
+                scannerHome = tool 'sonarqube'
+            } 
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                } 
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        stage('GoLangCI-Lint'){
             steps{
-				script{
-					try{
-						echo "[*] Running truffleHog ..."
-						sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/tfhog.json"
-					}
-					catch(err) {
-						
-					}
-				}
-				script{
-					FILENAME = sh (
-						script: "date +'%Y-%m-%d_%T'",
-						returnStdout: true
-					)
+                script{
+                try{
+                    echo "[*] Running Linter Gosec ..."
+                    sh "golangci-lint run --disable-all -E gosec"
+                }catch(err){}
+                try{
+                    echo "[*] Running Linter Deadcode ..."
+                    sh "golangci-lint run --disable-all -E deadcode"
+                }catch(err){}
+                try{
+                    echo "[*] Running Linter StaticCheck"
+                    sh "golangci-lint run --disable-all -E staticcheck"
+                }catch(err){}
+                try{
+                    echo "[*] Running Linter Unused"
+                    sh "golangci-lint run --disable-all -E unused"
+                }catch(err){}
+                try{
+                    echo "[*] Running Linter ErrCheck"
+                    sh "golangci-lint run --disable-all -E errcheck"
+                }catch(err){
+                    echo "${err}"               }
+                }
+            }
+        }
+        stage('SAST'){
+            steps{
+                script{
+                    try{
+                        echo "[*] Running truffleHog ..."
+                        sh "trufflehog --regex --json --max_depth 1 --rules ${TARGET_DIR}/rules.json ${TARGET_REPO} > ${TARGET_DIR}/tfhog.result"
+                    }
+                    catch(err) {
+                        
+                    }
+                    echo "[*] Scanning done ..."
+                }
+                
+                echo "[*] Checking scan result ..."
+                script{
+                    TFHOG_RESULT = sh (
+                        script: "jq . ${TARGET_DIR}/tfhog.result",
+                        returnStdout: true
+                    )
 
-					TFHOG_RESULT = sh (
-						script: "jq . ${TARGET_DIR}/tfhog.json",
-						returnStdout: true
-					)
-				}
-				echo "${TFHOG_RESULT}"
-				echo "${FILENAME}"
+                }
+                echo "${TFHOG_RESULT}"
 
-				echo "Create report"
-				sh "python3 ${TARGET_DIR}/convert.py > $FILENAME.report"
+                script{
+                    if ( TFHOG_RESULT ){
+                        echo "[*] Credential leaked ..."
+                    }
+                    else {
+                        echo "[*] No credential leaked ..."
+                    }
+                }
 
-				echo "[*] Removing [tfhog.json] file ..."
-				sh "rm ${TARGET_DIR}/tfhog.json"
+                echo "[*] Remove existing scan result file (tfhog.result) ..."
+                sh "rm ${TARGET_DIR}/tfhog.result"
             }
         }
 	}
