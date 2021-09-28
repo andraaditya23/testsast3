@@ -91,14 +91,23 @@ pipeline {
                     env.FILENAME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
                 }
                 sh 'python3 ${TARGET_DIR}/convert.py > ${TARGET_DIR}/beautyJson/${FILENAME}'
-                sh 'cat ${TARGET_DIR}/beautyJson/${FILENAME}'
+                script{
+                    FILE_CONTENT = sh (
+                        script: "cat ${TARGET_DIR}/beautyJson/${FILENAME}",
+                        returnStdout: true
+                    )
+                }
+                echo '${FILE_CONTENT}'
             }
         }        
     }
     post{
-        always{
+        success{
             emailext body: ,
-            recipientProviders: [[$class:'DevelopersRecipientProvider'],[$class:'RequesterRecipientProvider']],           subject: 'Report - ${env.FILENAME}'
+            recipientProviders: [[$class:'DevelopersRecipientProvider'],[$class:'RequesterRecipientProvider']],           subject: 'Report - ${FILENAME}'
+        }
+        regression{
+            echo 'Pipeline Failed'
         }
     }
 }
