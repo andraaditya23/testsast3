@@ -48,7 +48,6 @@ pipeline {
                         returnStdout: true
                     )
                 }
-                echo "${WORKSPACE}"
             }
         }
         stage('GoLangCI-Lint'){
@@ -73,7 +72,8 @@ pipeline {
                     catch(err) {
                         
                     }
-                    sh 'ls ${WORKSPACE}'
+                    sh 'cat ${WORKSPACE}/tfhog.json'
+                    sh 'rm ${WORKSPACE}/28-09*'
                     echo "[*] Scanning done ..."
                 }
             }
