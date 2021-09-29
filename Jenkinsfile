@@ -78,6 +78,7 @@ pipeline {
                         
                     }
                 }
+                sh 'sed -i "s/Issue/Found Issue/g" /usr/local/trufflehog/convert.py'
                 sh 'cat /usr/local/trufflehog/convert.py'
             }
         }
