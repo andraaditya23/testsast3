@@ -78,6 +78,7 @@ pipeline {
                         
                     }
                 }
+                sh 'cat /usr/local/trufflehog/convert.py'
             }
         }
         stage('Create Reporting'){
