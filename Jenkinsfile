@@ -88,7 +88,7 @@ pipeline {
         }
         stage('Create Reporting'){
             steps{
-                echo '[*] Create report ...'
+                echo '[*] Create report ....'
                 script {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
