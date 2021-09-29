@@ -35,6 +35,7 @@ pipeline {
             steps {
                 echo '> Checking out the source control ...'
                 checkout scm
+                echo scm
             }
         }
         stage('Installing Library'){
