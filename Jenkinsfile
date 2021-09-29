@@ -44,6 +44,7 @@ pipeline {
                         returnStdout: true
                     )
                 }
+                echo "ls -la ${WORKSPACE}"
             }
         }
         stage('GoLangCI-Lint'){
