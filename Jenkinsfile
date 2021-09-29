@@ -83,7 +83,7 @@ pipeline {
                 echo '[*] Create report ...'
                 script {
                     def now = new Date()
-                    env.REPORT_TIME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
+                    env.REPORT_TIME = now.format("dd-MM-YYYY at HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
                     
                     REPORT = sh(
                         script: "python3 ${TFHOG_DIR}/convert.py ${WORKSPACE}",
@@ -95,7 +95,7 @@ pipeline {
     }
     post{
         success {
-			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}\n\nReport Time ==> ${REPORT_TIME}\n${REPORT}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}", description: "\n\nReport Time ==> ${REPORT_TIME}\n${REPORT}"
 			sh "exit 0"
 		}
 
