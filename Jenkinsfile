@@ -95,6 +95,7 @@ pipeline {
                         returnStdout: true
                     )
                 }
+                sh 'sleep 5'
                 echo '[*] Remove report file ...'
                 sh 'rm ${REPORT_TIME}'
             }
