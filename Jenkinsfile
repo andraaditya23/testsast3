@@ -51,8 +51,8 @@ pipeline {
                 script{
                     sh "export PATH=$PATH:/usr/local/go/bin"
                     try{
-                        echo "[*] Running Linter ErrCheck"
-                        sh "${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format tab"
+                        echo "[*] Running Linter"
+                        sh "${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > errcheck.json"
                     }catch(err){}
                 }
             }
@@ -67,7 +67,6 @@ pipeline {
                     catch(err) {
                         
                     }
-                    sh 'ls -la ${WORKSPACE}'
                     sh 'cat tfhog.json'
                     echo "[*] Scanning done ..."
                 }
