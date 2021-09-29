@@ -83,7 +83,7 @@ pipeline {
                 echo '[*] Create report ...'
                 script {
                     def now = new Date()
-                    env.REPORT_TIME = now.format("dd-MM-YYYY at HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
+                    env.REPORT_TIME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
                     
                     REPORT = sh(
                         script: "python3 ${TFHOG_DIR}/convert.py ${WORKSPACE}",
