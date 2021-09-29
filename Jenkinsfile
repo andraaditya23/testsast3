@@ -86,16 +86,16 @@ pipeline {
                 script {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
-                }
-                sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
-                sh 'cat ${REPORT_TIME}'
-                script{
+
+                    sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
+                    sh 'cat ${REPORT_TIME}'
+                    
                     ISSUE_EXIST = sh(
                         script: "grep -o 'Issue #' ${REPORT_TIME}",
                         returnStdout: true
                     )
                 }
-                sh 'ls -l'
+                
                 echo '[*] Remove report file ...'
                 sh 'rm ${REPORT_TIME}'
             }
