@@ -73,8 +73,6 @@ pipeline {
                     catch(err) {
                         
                     }
-                    sh 'cat tfhog.json'
-                    echo "[*] Scanning done ..."
                 }
             }
         }
@@ -84,23 +82,22 @@ pipeline {
                 script {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
-                    
-                    REPORT = sh(
-                        script: "python3 ${TFHOG_DIR}/convert.py ${WORKSPACE}",
-                        returnStdout: true
-                    )
                 }
+                sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
+                sh 'ls -l'
+                sh 'grep -i -o "no issue" ${REPORT_TIME} | wc -l'
+                sh 'grep -i -o "scanner name" ${REPORT_TIME} | wc -l'
             }
         }        
     }
     post{
         success {
-			discordSend link: "${env.BUILD_URL}/console", result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			discordSend link: "${env.BUILD_URL}console", result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}, description:"
 			sh "exit 0"
 		}
 
 		regression {
-			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			discordSend link: "${env.BUILD_URL}console", result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
 			sh "exit 1"
 		}
 	}
