@@ -21,7 +21,6 @@ pipeline {
 
         DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/877591443986870313/0ALWAO9W7cSgo4LytxSYUJtSXDoRKm9dnQGp-fHWtKfcsS4YCgC7kUpQPApemhZBjOnf"
 
-        TARGET_REPO = "https://oauth2:hvE2MzrZzH6wnFyEDcjS@gitlab.pharmalink.id/rnd/backend-pipeline-security"
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
     }
@@ -36,8 +35,7 @@ pipeline {
                 echo '> Checking out the source control ...'
                 script{
                     def GIT = checkout scm
-                    echo GIT.GIT_URL
-                    echo GIT.GIT_BRANCH
+                    env.TARGET_REPO = GIT.GIT_URL
                 }
             }
         }
@@ -77,7 +75,10 @@ pipeline {
                 script{
                     try{
                         echo "[*] Running truffleHog ..."
+                        withCredentials([gitUsernamePassword(credentialsId: 'gitlab-pipeline-bot', gitToolName: 'git-tool')]) {
                         sh "${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > tfhog.json"
+}
+
                     }
                     catch(err) {
                         
@@ -96,7 +97,7 @@ pipeline {
                     sh 'cat ${REPORT_TIME}'
                     
                     ISSUE_EXIST = sh(
-                        script: "grep -o 'Issue #' ${REPORT_TIME}",
+                        script: "grep -o 'Found IssuE' ${REPORT_TIME}",
                         returnStdout: true
                     )
                 }
