@@ -32,7 +32,7 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                echo '> Checking out the source control ...'
+                echo '> Checking out the source control ... '
                 script{
                     def GIT = checkout scm
                     env.TARGET_REPO = GIT.GIT_URL
