@@ -36,6 +36,12 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Installing Library'){
+            steps{
+                echo "[*] Install Git"
+                sh 'pip3 install gitpython'
+            }
+        }
         stage('Declarative Variable'){
             steps{
                 script{
