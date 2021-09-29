@@ -1,0 +1,12 @@
+output:
+  sort-results: false
+linters:
+  disable-all: true
+  enable:
+    - gosec
+    - deadcode
+    - staticcheck
+    - unused
+    - errcheck
+    - structcheck
+    - varcheck
