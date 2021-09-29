@@ -97,7 +97,7 @@ pipeline {
                     sh 'cat ${REPORT_TIME}'
                     
                     ISSUE_EXIST = sh(
-                        script: "grep -o 'Found IssuE' ${REPORT_TIME}",
+                        script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
                         returnStdout: true
                     )
                 }
@@ -110,7 +110,7 @@ pipeline {
     post{
         success {
             script{
-                if(ISSUE_EXIST){
+                if(ISSUE_EXIST != 0){
                     discordSend link: "${env.BUILD_URL}console", 
                                 result: currentBuild.currentResult, 
                                 title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
