@@ -107,7 +107,7 @@ pipeline {
                     discordSend link: "${env.BUILD_URL}console", 
                                 result: currentBuild.currentResult, 
                                 title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
-                                webhookURL: "${env.DISCORD_WEBHOOK_URL}, 
+                                webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
                                 description:"```Report Time  ===> ${REPORT_TIME}\nTroublemaker ===> ${AUTHOR}```"
                     sh "exit 0"
                 }
