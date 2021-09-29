@@ -95,12 +95,12 @@ pipeline {
     }
     post{
         success {
-			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", description: "```Report Time ==> ${REPORT_TIME}\n\n${REPORT}```", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", description: "```Report Time ==> ${REPORT_TIME}\n\n${REPORT}```", webhookURL: "${env.DISCORD_WEBHOOK_URL}", image: "https://ichef.bbci.co.uk/news/640/amz/worldservice/live/assets/images/2016/09/28/160928191155_pepe_the_frog_549x549_pepethefrog_nocredit.jpg"
 			sh "exit 0"
 		}
 
 		regression {
-			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}", image: "https://ichef.bbci.co.uk/news/640/amz/worldservice/live/assets/images/2016/09/28/160928191155_pepe_the_frog_549x549_pepethefrog_nocredit.jpg"
+			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
 			sh "exit 1"
 		}
 	}
