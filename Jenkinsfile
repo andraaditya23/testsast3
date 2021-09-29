@@ -86,8 +86,8 @@ pipeline {
                 sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
                 sh 'ls -l'
                 sh 'cat ${REPORT_TIME}'
-                sh 'grep -i -o "no issue" ${REPORT_TIME} | wc -l'
-                sh 'grep -i -o "scanner name" ${REPORT_TIME} | wc -l'
+                sh 'grep -o "No Issue ..." ${REPORT_TIME} | wc -l'
+                sh 'grep -o "Scanner" ${REPORT_TIME} | wc -l'
                 sh 'rm 29-09*'
             }
         }        
