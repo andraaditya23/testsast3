@@ -109,9 +109,9 @@ pipeline {
                                 title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
                                 webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
                                 description:"```fix\nalert\n```"
-                    sh "exit 0"
                 }
             }
+            sh "exit 0"
 		}
 
 		regression {
