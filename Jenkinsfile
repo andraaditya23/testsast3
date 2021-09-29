@@ -108,12 +108,10 @@ pipeline {
                                 result: currentBuild.currentResult, 
                                 title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
                                 webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
-                                description:"```ISSUE FOUND\nTimestamp  ===> ${REPORT_TIME}\nAuthor    ===> ${AUTHOR}```"
-                }else{
-        			discordSend link: "${env.BUILD_URL}console", result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"                    
+                                description:"```Timestamp  ===> ${REPORT_TIME}\nAuthor    ===> ${AUTHOR}```"
+                    sh "exit 0"
                 }
             }
-            sh "exit 0"
 		}
 
 		regression {
