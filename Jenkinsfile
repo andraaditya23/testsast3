@@ -39,8 +39,6 @@ pipeline {
             steps{
                 echo '[*] Installing TruffleHog ...'
                 sh 'pip3 install trufflehog'
-                sh 'locate trufflehog'
-                sh 'locate truffleHog'
             }
         }
         stage('Declarative Variable'){
