@@ -91,7 +91,7 @@ pipeline {
                 sh 'cat ${REPORT_TIME}'
                 script{
                     ISSUE_EXIST = sh(
-                        script: "grep -o "Issue #" ${REPORT_TIME}",
+                        script: "grep -o "Issue \#" ${REPORT_TIME}",
                         returnStdout: true
                     )
                 }
