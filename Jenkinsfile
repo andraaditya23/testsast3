@@ -23,6 +23,7 @@ pipeline {
 
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
+        scannerHome = tool 'SonarQube';
     }
     
     options {
@@ -88,7 +89,6 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps{
-                def scannerHome = tool 'SonarQube';
                 withSonarQubeEnv() {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
