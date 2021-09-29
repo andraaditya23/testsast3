@@ -49,6 +49,10 @@ pipeline {
                         script: "pwd",
                         returnStdout: true
                     )
+                    AUTHOR = sh (
+                        script: "git log -1 --pretty=format:'%an <%ae>'",
+                        returnStdout: true
+                    )
                 }
             }
         }
@@ -78,24 +82,36 @@ pipeline {
         }
         stage('Create Reporting'){
             steps{
-                echo '[*] Create report ....'
+                echo '[*] Create report ...'
                 script {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
                 }
                 sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
-                sh 'ls -l'
                 sh 'cat ${REPORT_TIME}'
-                sh 'grep -o "No Issue ..." ${REPORT_TIME} | wc -l'
-                sh 'grep -o "Scanner" ${REPORT_TIME} | wc -l'
-                sh 'rm 29-09*'
+                script{
+                    ISSUE_EXIST = sh(
+                        script: "grep -o "Issue #" ${REPORT_TIME}",
+                        returnStdout: true
+                    )
+                }
+                echo '[*] Remove report file ...'
+                sh 'rm ${REPORT_TIME}'
             }
         }        
     }
     post{
         success {
-			discordSend link: "${env.BUILD_URL}console", result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}, description:"
-			sh "exit 0"
+            script{
+                if(ISSUE_EXIST){
+                    discordSend link: "${env.BUILD_URL}console", 
+                                result: currentBuild.currentResult, 
+                                title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
+                                webhookURL: "${env.DISCORD_WEBHOOK_URL}, 
+                                description:"```Report Time  ===> ${REPORT_TIME}\nTroublemaker ===> ${AUTHOR}```"
+                    sh "exit 0"
+                }
+            }
 		}
 
 		regression {
