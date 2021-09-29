@@ -35,12 +35,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Installing Library'){
-            steps{
-                echo '[*] Installing TruffleHog ...'
-                sh 'pip3 install trufflehog'
-            }
-        }
         stage('Declarative Variable'){
             steps{
                 script{
