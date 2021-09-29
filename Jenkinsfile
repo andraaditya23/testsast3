@@ -115,7 +115,7 @@ pipeline {
                                 result: currentBuild.currentResult, 
                                 title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
                                 webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
-                                description:"```elm\nALERT\ntimestamp  ===> ${REPORT_TIME}\nauthor     ===> ${AUTHOR}```"
+                                description:"```elm\nALERT\nTimestamp  ===> ${REPORT_TIME}\Author     ===> ${AUTHOR}```"
                     sh "exit 0"
                 }
             }
