@@ -97,6 +97,10 @@ pipeline {
                     sh 'cat ${REPORT_TIME}'
                     
                     ISSUE_EXIST = sh(
+                        script: "grep -o 'Found IssuE' ${REPORT_TIME}",
+                        returnStdout: true
+                    )
+                    ISSUE_COUNT = sh(
                         script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
                         returnStdout: true
                     )
@@ -110,12 +114,12 @@ pipeline {
     post{
         success {
             script{
-                if(ISSUE_EXIST != '0'){
+                if(ISSUE_EXIST){
                     discordSend link: "${env.BUILD_URL}console", 
                                 result: currentBuild.currentResult, 
                                 title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
                                 webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
-                                description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_EXIST}```"
+                                description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_COUNT}```"
                     sh "exit 0"
                 }
             }
