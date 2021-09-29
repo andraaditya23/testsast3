@@ -34,8 +34,11 @@ pipeline {
         stage('Checkout SCM') {
             steps {
                 echo '> Checking out the source control ...'
-                checkout scm
-                echo scm
+                script{
+                    def GIT = checkout scm
+                    echo GIT.GIT_URL
+                    echo GIT.GIT_BRANCH
+                }
             }
         }
         stage('Installing Library'){
