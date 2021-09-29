@@ -97,12 +97,11 @@ pipeline {
                     sh 'cat ${REPORT_TIME}'
                     
                     ISSUE_EXIST = sh(
-                        script: "grep -o 'Found IssuE' ${REPORT_TIME}",
-                        returnStdout: true
+                        script: "grep -o 'Found IssuE' ${REPORT_TIME}"
+                        
                     )
                     ISSUE_COUNT = sh(
-                        script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
-                        returnStdout: true
+                        script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l"
                     )
                 }
                 echo "${ISSUE_EXIST}"                
