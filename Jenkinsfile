@@ -91,12 +91,12 @@ pipeline {
     }
     post{
         success {
-			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
 			sh "exit 0"
 		}
 
 		regression {
-			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			discordSend link: env.BUILD_URL, result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
 			sh "exit 1"
 		}
 	}
