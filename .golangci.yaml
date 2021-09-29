@@ -1,5 +1,5 @@
 output:
-  sort-results: false
+  sort-results: true
 linters:
   disable-all: true
   enable:
