@@ -52,10 +52,8 @@ pipeline {
                     sh "export PATH=$PATH:/usr/local/go/bin"
                     try{
                         echo "[*] Running Linter ErrCheck"
-                        sh "${GOLANGCI_DIR}/bin/golangci-lint run --disable-all -E errcheck"
-                    }catch(err){
-                        echo "${err}"               
-                    }
+                        sh "${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format tab"
+                    }catch(err){}
                 }
             }
         }
