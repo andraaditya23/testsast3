@@ -95,7 +95,7 @@ pipeline {
     }
     post{
         success {
-			discordSend link: "env.BUILD_URL/console", result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
+			discordSend link: "${env.BUILD_URL}/console", result: currentBuild.currentResult, title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
 			sh "exit 0"
 		}
 
