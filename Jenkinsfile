@@ -105,18 +105,7 @@ pipeline {
                     sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
                     sh 'cat ${REPORT_TIME}'
                     
-                    CHECK_ISSUE = sh(
-                        script: "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt",
-                        returnStdout: true
-                    )
-                    echo '${CHECK_ISSUE}'
-                    sh 'ls -la'
-                    ISSUE_COUNT = sh(
-                        script: "wc -l < checkIssue.txt",
-                        returnStdout: true
-                    )
                 }               
-                echo "${ISSUE_COUNT}"
                 echo '[*] Remove report file ...'
                 sh 'rm ${REPORT_TIME}'
             }
@@ -125,14 +114,12 @@ pipeline {
     post{
         success {
             script{
-                if(CHECK_ISSUE){
-                    discordSend link: "${env.BUILD_URL}console", 
-                    result: currentBuild.currentResult, 
-                    title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
-                    webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
-                    description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_COUNT}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
-                    sh "exit 0"
-                }
+                discordSend link: "${env.BUILD_URL}console", 
+                result: currentBuild.currentResult, 
+                title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
+                webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
+                description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
+                sh "exit 0"
             }
         }
 
