@@ -23,7 +23,7 @@ pipeline {
 
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
-        scannerHome = tool 'SonarQube';
+        SCANNER_HOME = tool 'SonarQube';
     }
     
     options {
@@ -87,17 +87,10 @@ pipeline {
                 }
             }
         }
-        stage('Dependency Check') {
-            steps{
-                dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
-                dependencyCheckPublisher pattern: 'dependency-check'
-                sh 'ls ${WORKSPACE}/'
-            }
-        }
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv() {
-                    sh "${scannerHome}/bin/sonar-scanner"
+                    sh "${SCANNER_HOME}/bin/sonar-scanner"
                 }
             }
         }
@@ -123,7 +116,7 @@ pipeline {
         }        
     }
     post{
-        unstable {
+        success {
             script{
                 if(${ISSUE_EXIST} != "0" ){
                     discordSend link: "${env.BUILD_URL}console", 
