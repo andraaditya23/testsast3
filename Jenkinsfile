@@ -105,6 +105,8 @@ pipeline {
                     sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
                     sh 'cat ${REPORT_TIME}'
                     
+                    sh "grep -o 'Found IssuE' ${REPORT_TIME} > check_issue.txt"
+
                     ISSUE_COUNT = sh(
                         script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
                         returnStdout: true
