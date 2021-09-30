@@ -97,7 +97,7 @@ pipeline {
         }
         stage('Dependency Check'){
             steps{
-                sh ''alias dependency-check="/home/linuxbrew/.linuxbrew/Cellar/dependency-check/6.3.1/bin/dependency-check"'
+                sh 'alias dependency-check="/home/linuxbrew/.linuxbrew/Cellar/dependency-check/6.3.1/bin/dependency-check"'
                 sh 'dependency-check -s . --out ${WORKSPACE} --format XML'
             }
         }
