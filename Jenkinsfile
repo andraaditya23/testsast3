@@ -89,7 +89,9 @@ pipeline {
         }
         stage('Dependency Check') {
             steps{
-                sh 'dependency-check --out ${WORKSPACE} --format XML --scan .'
+                dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
+                dependencyCheckPublisher pattern: 'dependency-check'
+                sh 'ls ${WORKSPACE}/'
             }
         }
         stage('SonarQube Analysis') {
@@ -124,6 +126,7 @@ pipeline {
         success {
             script{
                 def count = "${ISSUE_EXIST}"
+                echo "${count}"
                 if(${count} != '0'){
                     discordSend link: "${env.BUILD_URL}console", 
                                 result: currentBuild.currentResult, 
