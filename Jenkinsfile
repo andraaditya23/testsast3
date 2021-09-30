@@ -106,7 +106,7 @@ pipeline {
                     sh 'cat ${REPORT_TIME}'
                     
                     ISSUE = sh(
-                        script: "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt"
+                        script: "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt",
                         returnStdout: true
                     )
                     sh 'ls -la'
