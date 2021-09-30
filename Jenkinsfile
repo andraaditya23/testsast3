@@ -90,7 +90,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv() {
-                    sh "${SCANNER_HOME}/bin/sonar-scanner > ${WORKSPACE}/sonarqube.txt"
+                    sh "set +x ${SCANNER_HOME}/bin/sonar-scanner"
                 }
             }
         }
