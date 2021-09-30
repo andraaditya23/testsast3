@@ -114,7 +114,7 @@ pipeline {
                     ISSUE_EXIST = sh(
                         script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
                         returnStdout: true
-                    )
+                    ).trim()
                 }
                 echo "${ISSUE_EXIST}"                
                 echo '[*] Remove report file ...'
@@ -125,7 +125,7 @@ pipeline {
     post{
         success {
             script{
-                if(ISSUE_EXIST != '0'){
+                if(ISSUE_EXIST > 0){
                     discordSend link: "${env.BUILD_URL}console", 
                                 result: currentBuild.currentResult, 
                                 title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
