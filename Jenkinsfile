@@ -119,7 +119,11 @@ pipeline {
     post{
         success {
             script{
-                def checkIssue = readFile('checkIssue.txt').contains('Found IssuE')
+                try{
+                    def checkIssue = readFile('checkIssue.txt').contains('Found IssuE')
+                }except{
+                    def checkIssue = false
+                }
                 echo "${checkIssue}"
                 if(checkIssue){
                     discordSend link: "${env.BUILD_URL}console", 
