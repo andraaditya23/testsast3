@@ -104,21 +104,15 @@ pipeline {
                     sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
                     sh 'cat ${REPORT_TIME}'
                     
-                    ISSUE = sh(
+                    ISSUE_EXIST = sh(
                         script: "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt",
                         returnStdout: true
                     )
-                    ISSUE_EXIST = sh(
-                        script: "cat checkIssue.txt",
-                        returnStdout: true
-                    )
                     ISSUE_COUNT = sh(
-                        script: "wc -l checkIssue.txt",
+                        script: "wc -l < checkIssue.txt",
                         returnStdout: true
                     )
-                }
-                echo "${ISSUE}"
-                echo "${ISSUE_EXIST}"                
+                }               
                 echo "${ISSUE_COUNT}"
                 echo '[*] Remove report file ...'
                 sh 'rm ${REPORT_TIME}'
