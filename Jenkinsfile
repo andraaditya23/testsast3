@@ -106,8 +106,7 @@ pipeline {
                     
                     sh "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt"
                     ISSUE_EXIST = sh(
-                        script: "cat checkIssue.txt",
-                        returnStdout: true
+                        script: "cat checkIssue.txt"
                     )
                     ISSUE_COUNT = sh(
                         script: "wc -l < checkIssue.txt",
