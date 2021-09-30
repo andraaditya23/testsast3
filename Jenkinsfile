@@ -91,7 +91,7 @@ pipeline {
             steps{
                 dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
                 dependencyCheckPublisher pattern: 'dependency-check'
-                sh 'ls /tmp/workspace/pi-rnd-backend-pipeline-security/${WORKSPACE}/'
+                sh 'ls ${WORKSPACE}/'
             }
         }
         stage('SonarQube Analysis') {
