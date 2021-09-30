@@ -110,7 +110,7 @@ pipeline {
                         returnStdout: true
                     )
 
-                    def check = return readFile('checkIssue.txt').contains('FoundIssuE')
+                    def check = readFile('checkIssue.txt').contains('FoundIssuE')
                     echo "${check}"
                 }               
                 echo "${ISSUE_COUNT}"
