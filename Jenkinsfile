@@ -114,7 +114,7 @@ pipeline {
                     ISSUE_EXIST = sh(
                         script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
                         returnStdout: true
-                    ).trim()
+                    )
                 }
                 echo "${ISSUE_EXIST}"                
                 echo '[*] Remove report file ...'
