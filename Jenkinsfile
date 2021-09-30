@@ -119,12 +119,14 @@ pipeline {
     post{
         success {
             script{
-                discordSend link: "${env.BUILD_URL}console", 
-                result: currentBuild.currentResult, 
-                title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
-                webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
-                description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_COUNT}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
-                sh "exit 0"
+                if(ISSUE_COUNT != '0'){
+                    discordSend link: "${env.BUILD_URL}console", 
+                    result: currentBuild.currentResult, 
+                    title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
+                    webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
+                    description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_COUNT}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
+                    sh "exit 0"
+                }
             }
         }
 
