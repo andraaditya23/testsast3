@@ -106,7 +106,7 @@ pipeline {
                     sh 'cat ${REPORT_TIME}'
                     
                     sh 'rm ${WORKSPACE}/checkIssue.txt'
-                    sh "grep -o 'Found IssuE' ${REPORT_TIME} > ${WORKSPACE}/checkIssue.txt"
+                    sh "grep -o 'Found IssuE' ${WORKSPACE}/${REPORT_TIME} > ${WORKSPACE}/checkIssue.txt"
                     ISSUE_COUNT = sh(
                         script: "wc -l < ${WORKSPACE}checkIssue.txt",
                         returnStdout: true
