@@ -121,7 +121,7 @@ pipeline {
             script{
                 try{
                     def checkIssue = readFile('checkIssue.txt').contains('Found IssuE')
-                }catch{
+                }catch(err){
                     def checkIssue = false
                 }
                 echo "${checkIssue}"
