@@ -42,7 +42,6 @@ pipeline {
         }
         stage('Installing Library'){
             steps{
-                sh 'locate dependency-check'
                 echo "[*] Install Git"
                 sh 'pip3 install gitpython'
             }
@@ -91,7 +90,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv() {
-                    sh "${SCANNER_HOME}/bin/sonar-scanner"
+                    sh "${SCANNER_HOME}/bin/sonar-scanner > ${WORKSPACE}/sonarqube.txt"
                 }
             }
         }
