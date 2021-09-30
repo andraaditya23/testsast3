@@ -104,8 +104,9 @@ pipeline {
                     sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
                     sh 'cat ${REPORT_TIME}'
                     
+                    sh "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt"
                     ISSUE_EXIST = sh(
-                        script: "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt",
+                        script: "cat checkIssue.txt",
                         returnStdout: true
                     )
                     ISSUE_COUNT = sh(
