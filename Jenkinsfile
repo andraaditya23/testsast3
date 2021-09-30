@@ -42,6 +42,7 @@ pipeline {
         }
         stage('Installing Library'){
             steps{
+                sh 'locate dependency-check'
                 echo "[*] Install Git"
                 sh 'pip3 install gitpython'
             }
@@ -113,7 +114,7 @@ pipeline {
                     try{
                         CHECK_ISSUE = readFile('checkIssue.txt').contains('Found IssuE')
                     }catch(err){
-                        CHECK_ISSUE = false
+                        echo '${err}'
                     }
                     echo '${CHECK_ISSUE}'
                 }               
