@@ -117,7 +117,9 @@ pipeline {
                         returnStdout: true
                     )
                 }
+                echo "${ISSUE}"
                 echo "${ISSUE_EXIST}"                
+                echo "${ISSUE_COUNT}"
                 echo '[*] Remove report file ...'
                 sh 'rm ${REPORT_TIME}'
             }
