@@ -105,18 +105,13 @@ pipeline {
                     sh 'cat ${REPORT_TIME}'
                     
                     sh "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt"
-                    ISSUE_EXIST = sh(
-                        script: "cat checkIssue.txt"
-                    )
                     ISSUE_COUNT = sh(
                         script: "wc -l < checkIssue.txt",
                         returnStdout: true
                     )
-                    if(ISSUE_COUNT > 0){
-                        echo "Exist"
-                    }else{
-                        echo "Not Exist"
-                    }
+
+                    def check = return readFile('checkIssue.txt').contains('FoundIssuE')
+                    echo "${check}"
                 }               
                 echo "${ISSUE_COUNT}"
                 echo '[*] Remove report file ...'
@@ -126,17 +121,13 @@ pipeline {
     }
     post{
         success {
-            script{
-                if(ISSUE_EXIST){
-                    discordSend link: "${env.BUILD_URL}console", 
-                                result: currentBuild.currentResult, 
-                                title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
-                                webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
-                                description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_COUNT}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
-                    sh "exit 0"
-                }
-            }
-		}
+            discordSend link: "${env.BUILD_URL}console", 
+                        result: currentBuild.currentResult, 
+                        title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
+                        webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
+                        description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_COUNT}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
+            sh "exit 0"
+        }
 
 		regression {
 			discordSend link: "${env.BUILD_URL}console", result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
