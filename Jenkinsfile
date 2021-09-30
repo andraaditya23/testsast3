@@ -110,8 +110,11 @@ pipeline {
                         returnStdout: true
                     )
 
-                    def lines = new File('${WORKSPACE}/checkIssue.txt').readLines()
-                    env.CHECK_ISSUE = lines.findAll {it.contains('Found IssuE')}
+                    try{
+                        CHECK_ISSUE = readFile('checkIssue.txt').contains('Found IssuE')
+                    }catch(err){
+                        CHECK_ISSUE = ""
+                    }
                     echo '${CHECK_ISSUE}'
                 }               
                 echo "${ISSUE_COUNT}"
