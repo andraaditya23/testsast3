@@ -95,12 +95,6 @@ pipeline {
                 }
             }
         }
-        stage('Dependency Check'){
-            steps{
-                sh 'alias dependency-check="/home/linuxbrew/.linuxbrew/Cellar/dependency-check/6.3.1/bin/dependency-check"'
-                sh 'dependency-check -s . --out ${WORKSPACE} --format XML'
-            }
-        }
         stage('Create Reporting'){
             steps{
                 echo '[*] Create report ....'
@@ -117,12 +111,10 @@ pipeline {
                         returnStdout: true
                     )
 
-                    CHECK_ISSUE = ""
-                    try{
-                        CHECK_ISSUE = readFile('checkIssue.txt').contains('Found IssuE')
-                    }catch(err){
-                        
-                    }
+                    CHECK_ISSUE = sh(
+                        script: "grep -o 'Found IssuE' checkIssue.txt",
+                        returnStdout: true
+                    )
                     echo '${CHECK_ISSUE}'
                 }               
                 echo "${ISSUE_COUNT}"
