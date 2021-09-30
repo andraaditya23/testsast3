@@ -113,7 +113,7 @@ pipeline {
                     try{
                         CHECK_ISSUE = readFile('checkIssue.txt').contains('Found IssuE')
                     }catch(err){
-                        CHECK_ISSUE = ""
+                        CHECK_ISSUE = false
                     }
                     echo '${CHECK_ISSUE}'
                 }               
