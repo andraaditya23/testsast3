@@ -89,9 +89,7 @@ pipeline {
         }
         stage('Dependency Check') {
             steps{
-                dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
-                dependencyCheckPublisher pattern: 'dependency-check'
-                sh 'ls ${WORKSPACE}/'
+                sh 'dependency-check --out ${WORKSPACE} --format XML --scan .'
             }
         }
         stage('SonarQube Analysis') {
