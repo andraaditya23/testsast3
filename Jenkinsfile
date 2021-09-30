@@ -112,6 +112,11 @@ pipeline {
                         script: "wc -l < checkIssue.txt",
                         returnStdout: true
                     )
+                    if(ISSUE_COUNT > 0){
+                        echo "Exist"
+                    }else{
+                        echo "Not Exist"
+                    }
                 }               
                 echo "${ISSUE_COUNT}"
                 echo '[*] Remove report file ...'
