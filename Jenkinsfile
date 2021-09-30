@@ -109,8 +109,7 @@ pipeline {
                         script: "wc -l < checkIssue.txt",
                         returnStdout: true
                     )
-
-                    def check = readFile('checkIssue.txt').contains('FoundIssuE')
+                    def check = readFile('checkIssue.txt').contains('Found IssuE')
                     echo "${check}"
                 }               
                 echo "${ISSUE_COUNT}"
