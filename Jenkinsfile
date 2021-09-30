@@ -112,7 +112,7 @@ pipeline {
 
                     def lines = new File('${WORKSPACE}/checkIssue.txt').readLines()
                     env.CHECK_ISSUE = lines.findAll {it.contains('Found IssuE')}
-                    println ${CHECK_ISSUE}*.toString()
+                    echo '${CHECK_ISSUE}'
                 }               
                 echo "${ISSUE_COUNT}"
                 echo '[*] Remove report file ...'
