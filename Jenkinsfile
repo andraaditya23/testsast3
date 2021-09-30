@@ -87,6 +87,12 @@ pipeline {
                 }
             }
         }
+        stage('Dependency Check') {
+            steps{
+                dependencyCheck additionalArguments: '--format XML -s .', odcInstallation: 'dependency-check'
+                dependencyCheckPublisher pattern: 'dependency-check'
+            }
+        }
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv() {
