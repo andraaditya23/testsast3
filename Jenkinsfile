@@ -105,6 +105,10 @@ pipeline {
                     sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
                     sh 'cat ${REPORT_TIME}'
                     
+                    ISSUE_COUNT = sh(
+                        script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
+                        returnStdout: true
+                    )
                 }               
                 echo '[*] Remove report file ...'
                 sh 'rm ${REPORT_TIME}'
@@ -118,7 +122,7 @@ pipeline {
                 result: currentBuild.currentResult, 
                 title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
                 webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
-                description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
+                description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_COUNT}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
                 sh "exit 0"
             }
         }
