@@ -109,8 +109,6 @@ pipeline {
                         script: "wc -l < checkIssue.txt",
                         returnStdout: true
                     )
-                    def checkIssue = readFile('checkIssue.txt').contains('Found IssuE')
-                    echo "${checkIssue}"
                 }               
                 echo "${ISSUE_COUNT}"
                 echo '[*] Remove report file ...'
@@ -121,6 +119,8 @@ pipeline {
     post{
         success {
             script{
+                def checkIssue = readFile('checkIssue.txt').contains('Found IssuE')
+                echo "${checkIssue}"
                 if(checkIssue){
                     discordSend link: "${env.BUILD_URL}console", 
                     result: currentBuild.currentResult, 
