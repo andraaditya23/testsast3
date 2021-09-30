@@ -105,15 +105,15 @@ pipeline {
                     sh 'cat ${REPORT_TIME}'
                     
                     ISSUE = sh(
-                        script: "grep -o 'Found IssuE' ${REPORT_TIME} > ${WORKSPACE}/checkIssue.txt",
+                        script: "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt",
                         returnStdout: true
                     )
                     ISSUE_EXIST = sh(
-                        script: "cat ${WORKSPACE}/checkIssue.txt",
+                        script: "cat checkIssue.txt",
                         returnStdout: true
                     )
                     ISSUE_COUNT = sh(
-                        script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
+                        script: "wc -l checkIssue.txt",
                         returnStdout: true
                     )
                 }
