@@ -91,6 +91,7 @@ pipeline {
             steps{
                 dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
                 dependencyCheckPublisher pattern: 'dependency-check'
+                sh 'ls -la'
             }
         }
         stage('SonarQube Analysis') {
