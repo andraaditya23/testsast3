@@ -125,7 +125,8 @@ pipeline {
     post{
         success {
             script{
-                if(${ISSUE_EXIST} != '0'){
+                def count = "${ISSUE_EXIST}"
+                if(${count} != '0'){
                     discordSend link: "${env.BUILD_URL}console", 
                                 result: currentBuild.currentResult, 
                                 title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
