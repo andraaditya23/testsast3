@@ -87,11 +87,6 @@ pipeline {
                 }
             }
         }
-        stage('Dependency Check'){
-            steps{
-                sh 'dependency-check -s . --out ${WORKSPACE} --format XML'
-            }
-        }
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv() {
