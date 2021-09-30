@@ -89,7 +89,7 @@ pipeline {
         }
         stage('Dependency Check') {
             steps{
-                dependencyCheck additionalArguments: '--format XML -s .', odcInstallation: 'dependency-check'
+                dependencyCheck additionalArguments: '', odcInstallation: 'dependency-check'
                 dependencyCheckPublisher pattern: 'dependency-check'
             }
         }
