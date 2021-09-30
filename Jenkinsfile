@@ -23,7 +23,7 @@ pipeline {
 
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
-        SCANNER_HOME = tool 'SonarQube';
+        scannerHome = tool 'SonarQube';
     }
     
     options {
@@ -75,7 +75,7 @@ pipeline {
             steps{
                 script{
                     try{
-                        echo "[*] Running truffleHog ...."
+                        echo "[*] Running truffleHog ..."
                         withCredentials([gitUsernamePassword(credentialsId: 'gitlab-pipeline-bot', gitToolName: 'git-tool')]) {
                         sh "${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > tfhog.json"
 }
@@ -87,10 +87,15 @@ pipeline {
                 }
             }
         }
+        stage('Dependency Check'){
+            steps{
+                sh 'dependency-check -s . --out ${WORKSPACE} --format XML'
+            }
+        }
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv() {
-                    sh "${SCANNER_HOME}/bin/sonar-scanner"
+                    sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
         }
@@ -104,20 +109,12 @@ pipeline {
                     sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
                     sh 'cat ${REPORT_TIME}'
                     
-                    sh "grep -o 'Found IssuE' ${REPORT_TIME} > checkIssue.txt"
-                    ISSUE_COUNT = sh(
-                        script: "wc -l < checkIssue.txt",
+                    ISSUE_EXIST = sh(
+                        script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
                         returnStdout: true
                     )
-
-                    try{
-                        CHECK_ISSUE = readFile('checkIssue.txt').contains('Found IssuE')
-                    }catch(err){
-                        CHECK_ISSUE = ""
-                    }
-                    echo '${CHECK_ISSUE}'
-                }               
-                echo "${ISSUE_COUNT}"
+                }
+                echo "${ISSUE_EXIST}"                
                 echo '[*] Remove report file ...'
                 sh 'rm ${REPORT_TIME}'
             }
@@ -126,16 +123,16 @@ pipeline {
     post{
         success {
             script{
-                if(CHECK_ISSUE){
+                if(ISSUE_EXIST != '0'){
                     discordSend link: "${env.BUILD_URL}console", 
-                    result: currentBuild.currentResult, 
-                    title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
-                    webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
-                    description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_COUNT}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
+                                result: currentBuild.currentResult, 
+                                title: "${env.JOB_NAME} #${env.BUILD_NUMBER}", 
+                                webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
+                                description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_EXIST}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
                     sh "exit 0"
                 }
             }
-        }
+		}
 
 		regression {
 			discordSend link: "${env.BUILD_URL}console", result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
