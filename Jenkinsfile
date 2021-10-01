@@ -50,11 +50,11 @@ pipeline {
             steps{
                 script{
                     WORKSPACE = sh (
-                        script: "pwd",
+                        script: "{ pwd; } 2>/dev/null",
                         returnStdout: true
                     )
                     AUTHOR = sh (
-                        script: "git log -1 --pretty=format:'%an <%ae>'",
+                        script: "{ git log -1 --pretty=format:'%an <%ae>'; } 2>/dev/null",
                         returnStdout: true
                     )
                 }
