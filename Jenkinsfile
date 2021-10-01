@@ -23,6 +23,7 @@ pipeline {
 
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
+        DEPENDENCY_CHECK_DIR = '/usr/local/dependency-check/6.3.1'
         SCANNER_HOME = tool 'SonarQube';
     }
     
@@ -66,9 +67,15 @@ pipeline {
                     sh "{ export PATH=$PATH:/usr/local/go/bin; } 2>/dev/null"
                     try{
                         echo "[*] Running Linter"
-                        sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > errcheck.json; } 2>/dev/null"
+                        sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > golangci-report.json; } 2>/dev/null"
                     }catch(err){}
                 }
+            }
+        }
+        stage('Dependency-Check'){
+            steps{
+                echo "[*] Running Dependency Check"
+                sh "{ ${DEPENDENCY_CHECK_DIR}/bin/dependency-check -s . --format JSON } 2>/dev/null"
             }
         }
         stage('TruffleHog'){
@@ -77,7 +84,7 @@ pipeline {
                     try{
                         echo "[*] Running truffleHog ...."
                         withCredentials([gitUsernamePassword(credentialsId: 'gitlab-pipeline-bot', gitToolName: 'git-tool')]) {
-                        sh "{ ${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > tfhog.json; } 2>/dev/null"
+                        sh "{ ${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > tfhog-report.json; } 2>/dev/null"
 }
 
                     }
