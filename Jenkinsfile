@@ -77,7 +77,7 @@ pipeline {
                     try{
                         echo "[*] Running truffleHog ...."
                         withCredentials([gitUsernamePassword(credentialsId: 'gitlab-pipeline-bot', gitToolName: 'git-tool')]) {
-                        sh "${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > tfhog.json"
+                        sh "{ ${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > tfhog.json; } 2>/dev/null"
 }
 
                     }
@@ -90,7 +90,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv() {
-                    sh "${SCANNER_HOME}/bin/sonar-scanner"
+                    sh "{ ${SCANNER_HOME}/bin/sonar-scanner; } 2>/dev/null"
                 }
             }
         }
@@ -101,11 +101,11 @@ pipeline {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
 
-                    sh 'python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}'
-                    sh 'cat ${REPORT_TIME}'
+                    sh '{ python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}; } 2>/dev/null'
+                    sh '{ cat ${REPORT_TIME}; } 2>/dev/null'
                     
                     ISSUE_COUNT = sh(
-                        script: "grep -o 'Found IssuE' ${REPORT_TIME} | wc -l",
+                        script: "{ grep -o 'Found IssuE' ${REPORT_TIME} | wc -l; } 2>/dev/null",
                         returnStdout: true
                     ).trim().toString()
                     echo "${ISSUE_COUNT}"
