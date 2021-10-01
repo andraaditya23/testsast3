@@ -43,7 +43,7 @@ pipeline {
         stage('Installing Library'){
             steps{
                 echo "[*] Install Git"
-                sh 'set +x && pip3 install gitpython'
+                sh 'pip3 install gitpython'
             }
         }
         stage('Declarative Variable'){
