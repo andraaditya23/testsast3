@@ -75,7 +75,7 @@ pipeline {
         stage('Dependency-Check'){
             steps{
                 echo "[*] Running Dependency Check"
-                sh "{ ${DEPENDENCY_CHECK_DIR}/bin/dependency-check -s . --format JSON } 2>/dev/null"
+                sh "{ ${DEPENDENCY_CHECK_DIR}/bin/dependency-check -s ${WORKSPACE} --format JSON } 2>/dev/null"
             }
         }
         stage('TruffleHog'){
