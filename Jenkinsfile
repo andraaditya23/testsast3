@@ -111,7 +111,7 @@ pipeline {
                     echo "${ISSUE_COUNT}"
                 }               
                 echo '[*] Remove report file ...'
-                sh 'rm ${REPORT_TIME}'
+                sh '{ rm ${REPORT_TIME}; } 2>/dev/null'
             }
         }        
     }
