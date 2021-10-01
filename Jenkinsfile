@@ -44,7 +44,7 @@ pipeline {
             steps{
                 echo "[*] Install Git"
                 sh '''
-                    #!/bin/bash -e
+                    #!/bin/sh +x
                     pip3 install gitpython
                 '''
             }
