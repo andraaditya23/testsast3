@@ -62,6 +62,7 @@ pipeline {
         }
         stage('Modify Convert file'){
             steps{
+                sh 'ls -l ${TFHOG_DIR}/'
                 sh 'sed -i "s/dependency_check(pathDir)/# dependency_check(pathDir)/g" ${TFHOG_DIR}/convert.py'
             }
         }
