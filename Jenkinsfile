@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-    go 'go'
+        go 'go'
     }
     environment {
         GO111MODULE = "on"
@@ -24,7 +24,7 @@ pipeline {
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
         DEPENDENCY_CHECK_DIR = '/usr/local/dependency-check/6.3.1'
-        scannerHome = tool 'SonarQube';
+        scannerHome = tool 'SonarQube'
     }
     
     options {
