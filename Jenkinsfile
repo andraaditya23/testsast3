@@ -97,7 +97,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv() {
-                    sh "${SCANNER_HOME}/bin/sonar-scanner"
+                    sh "{ ${SCANNER_HOME}/bin/sonar-scanner; } 2>/dev/null"
                 }
             }
         }
