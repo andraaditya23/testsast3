@@ -74,7 +74,7 @@ pipeline {
         }
         stage('Dependency-Check'){
             steps{
-                echo "[*] Running Dependency Check"
+                echo "[*] Running Dependency Check ..."
                 sh "${DEPENDENCY_CHECK_DIR}/bin/dependency-check -s . --format JSON"
             }
         }
