@@ -24,7 +24,6 @@ pipeline {
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
         DEPENDENCY_CHECK_DIR = '/usr/local/dependency-check/6.3.1'
-        SCANNER_HOME = tool 'SonarQube';
     }
     
     options {
@@ -91,8 +90,9 @@ pipeline {
         stage('SonarQube Analysis') {
             steps{
                 echo '[*] Run SonarQube ...'
+                def SCANNER_HOME = tool 'SonarQube';
                 withSonarQubeEnv() {
-                    sh "{ ${SCANNER_HOME}/bin/sonar-scanner; } 2>/dev/null"
+                    sh "${SCANNER_HOME}/bin/sonar-scanner"
                 }
             }
         }
