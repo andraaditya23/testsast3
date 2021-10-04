@@ -116,10 +116,59 @@ pipeline {
                 echo '[*] Remove report file ...'
                 sh '{ rm ${REPORT_TIME}; } 2>/dev/null'
             }
-        }        
+        }
+        stage('Compile') {
+			steps {
+				echo '> Building executable ...'
+				sh 'make build'
+			}
+		}
+		stage('Version') {
+			steps {
+				script {
+					env.VERSION = sh(script: "jx-release-version", returnStdout: true).trim()
+				}
+				withCredentials([gitUsernamePassword(credentialsId: 'gitlab-pipeline-bot', gitToolName: 'git-tool')]) {
+					sh "git config user.email '${env.PIPELINE_BOT_EMAIL}'"
+					sh "git config user.name '${env.PIPELINE_BOT_NAME}'"
+					sh "git tag -fa v${env.VERSION} -m '${env.VERSION}'"
+					sh "git push origin v${env.VERSION}"
+				}
+			}
+		}
+		stage('Dockerize') {
+			steps {
+				script {
+					echo '> Creating image ...'
+					def dockerImage = docker.build("${PROJECT_ID}/${NAME}")
+					echo '> Pushing image ...'
+					docker.withRegistry("${DOCKER_REGISTRY_URL}", "gcr:pharmalink-id") {
+						dockerImage.push("${env.VERSION}")
+					}
+				}
+			}
+		}
+		stage('Helm Charts') {
+			steps {
+				echo '> Changing repository name value ...'
+				sh "sed -i 's#repository: draft#repository: gcr.io/${ORG}-main/${NAME}#g' charts/values.yaml"
+				echo '> Changing version value ...'
+				sh "sed -i 's/tag: dev/tag: ${env.VERSION}/g' charts/values.yaml"
+				echo '> Packing helm chart ...'
+				sh "cd charts && helm package . --version=${env.VERSION}"
+				echo '> Uploading chart ...'
+				sh "cd charts && curl --data-binary '@${env.NAME}-${env.VERSION}.tgz' http://chartmuseum:8080/api/${env.ORG}/charts"
+				echo '> Removing uploaded chart package ...'
+				sh "rm charts/${env.NAME}-${env.VERSION}.tgz"
+			}
+		}        
     }
     post{
         success {
+            build job: 'k8s-blue-sapphire-staging', parameters: [
+				string(name: 'PROJECT_NAME', value: "${env.NAME}"),
+				string(name: 'PROJECT_VERSION', value: "${env.VERSION}")
+			], wait: false
             script{
                 if(ISSUE_COUNT != '0'){
                     discordSend link: "${env.BUILD_URL}console", 
@@ -131,7 +180,6 @@ pipeline {
                 }
             }
         }
-
 		regression {
 			discordSend link: "${env.BUILD_URL}console", result: currentBuild.currentResult, title: "${env.JOB_NAME}\n#${env.BUILD_NUMBER}", webhookURL: "${env.DISCORD_WEBHOOK_URL}"
 			sh "exit 1"
