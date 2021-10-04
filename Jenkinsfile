@@ -90,6 +90,7 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps{
+                echo '[*] Run SonarQube ...'
                 withSonarQubeEnv('research-test') {
                     sh "{ ${SCANNER_HOME}/bin/sonar-scanner; } 2>/dev/null"
                 }
