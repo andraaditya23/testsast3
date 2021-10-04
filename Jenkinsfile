@@ -60,7 +60,7 @@ pipeline {
                 }
             }
         }
-        stage('Modify Convert file){
+        stage('Modify Convert file'){
             steps{
                 sh 'cat ${TFHOG_DIR}/convert.py'
             }
