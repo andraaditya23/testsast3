@@ -89,8 +89,10 @@ pipeline {
             }
         }
         stage('SonarQube Analysis') {
-            withSonarQubeEnv() {
-                sh "${scannerHome}/bin/sonar-scanner"
+            steps{
+                withSonarQubeEnv() {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
             }
         }
         stage('Create Reporting'){
