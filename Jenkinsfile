@@ -60,6 +60,11 @@ pipeline {
                 }
             }
         }
+        stage('Modify Convert file){
+            steps{
+                sh 'cat ${TFHOG_DIR}/convert.py'
+            }
+        }
         stage('GoLangCI-Lint'){
             steps{
                 script{
