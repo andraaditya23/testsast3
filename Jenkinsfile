@@ -64,8 +64,12 @@ pipeline {
             steps{
                 script{
                     sh "{ export PATH=$PATH:/usr/local/go/bin; } 2>/dev/null"
+                    try{
                         echo "[*] Running Linter"
-                        sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json > golangci-report.json; } 2>/dev/null"
+                        sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > golangci-report.json; } 2>/dev/null"
+                    }catch(err){
+                        sh "exit 1"
+                    }
                 }
             }
         }
