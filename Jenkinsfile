@@ -103,7 +103,6 @@ pipeline {
             steps{
                 echo '[*] Create report ....'
                 script {
-                    sh "ls -la"
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
 
@@ -115,6 +114,8 @@ pipeline {
                         returnStdout: true
                     ).trim().toString()
                     echo "${ISSUE_COUNT}"
+
+                    sh "ls -l"
                 }               
                 echo '[*] Remove report file ...'
             }
