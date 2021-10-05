@@ -104,11 +104,8 @@ pipeline {
                         script: "{ grep -o 'Found IssuE' ${REPORT_TIME} | wc -l; } 2>/dev/null",
                         returnStdout: true
                     ).trim().toString()
-                    echo "${ISSUE_COUNT}"
-
-                    sh "ls -l"
+                    echo "[*] Total Issue : ${ISSUE_COUNT}"
                 }               
-                echo '[*] Remove report file ...'
             }
         }
         stage('Compile') {
