@@ -67,7 +67,9 @@ pipeline {
                     try{
                         echo "[*] Running Linter"
                         sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > golangci-report.json; } 2>/dev/null"
-                    }catch(err){}
+                    }catch(err){
+                        sh "exit 0"
+                    }
                 }
             }
         }
