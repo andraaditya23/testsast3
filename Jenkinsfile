@@ -62,27 +62,22 @@ pipeline {
         }
         stage('GoLangCI-Lint'){
             steps{
-                catchError(buildResult: 'SUCCESS', stageResult: 'Failure'){
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                     sh "{ export PATH=$PATH:/usr/local/go/bin; } 2>/dev/null"
                     echo "[*] Running Linter"
-                    sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml ; } 2>/dev/null"
+                    sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > golangci-report.json; } 2>/dev/null"
                 }               
             }
         }
         stage('TruffleHog'){
             steps{
-                script{
-                    try{
-                        echo "[*] Running truffleHog ...."
-                        withCredentials([gitUsernamePassword(credentialsId: 'gitlab-pipeline-bot', gitToolName: 'git-tool')]) {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                    echo "[*] Running truffleHog ...."
+                    withCredentials([gitUsernamePassword(credentialsId:'gitlab-pipeline-bot',gitToolName: 'git-tool')]) {
                         sh "{ ${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > tfhog-report.json; } 2>/dev/null"
-}
-
-                    }
-                    catch(err) {
-                        
-                    }
+    }
                 }
+                    
             }
         }
         stage('SonarQube Analysis') {
