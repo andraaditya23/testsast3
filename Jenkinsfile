@@ -112,7 +112,7 @@ pipeline {
         }
         stage('Upload Logs to GCS') {
             steps {
-               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.BUCKET}", pattern: '/tmp/workspace/pi-rnd-backend-pipeline-security/*'])
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '/tmp/workspace/pi-rnd-backend-pipeline-security/*'])
             }
         }
         stage('Compile') {
