@@ -24,6 +24,8 @@ pipeline {
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
         DEPENDENCY_CHECK_DIR = '/usr/local/dependency-check/6.3.1'
+
+        GCS_BUCKET = 'pharmalink-id-build-logs'
     }
     
     options {
@@ -106,6 +108,11 @@ pipeline {
                     ).trim().toString()
                     echo "[*] Total Issue : ${ISSUE_COUNT}"
                 }               
+            }
+        }
+        stage('Upload Logs to GCS') {
+            steps {
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.BUCKET}", pattern: ${env.REPORT_TIME}])
             }
         }
         stage('Compile') {
