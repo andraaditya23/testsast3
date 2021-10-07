@@ -24,6 +24,7 @@ pipeline {
         TFHOG_DIR = '/usr/local/trufflehog'
         GOLANGCI_DIR = '/usr/local/golangci-lint'
         DEPENDENCY_CHECK_DIR = '/usr/local/dependency-check/6.3.1'
+        GITLEAKS_DIR = '/usr/local/gitleaks'
 
         GCS_BUCKET = 'pharmalink-id-build-logs'
     }
@@ -92,14 +93,20 @@ pipeline {
                 }
             }
         }
+        stage('Gitleaks'){
+            steps{
+                echo '[*] Running Gitleaks ...'
+                sh "{ ${GITLEAKS_DIR}/bin/gitleaks -p ${WORKSPACE} --no-git -v -q > gitleaks-report.json; } 2>/dev/null"
+            }
+        }
         stage('Create Reporting'){
             steps{
                 echo '[*] Create report ...'
                 script {
                     def now = new Date()
-                    env.REPORT_TIME = now.format("dd-MM-YYYY_HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
+                    env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
 
-                    sh '{ python3 ${TFHOG_DIR}/convert.py ${WORKSPACE} > ${WORKSPACE}/${REPORT_TIME}; } 2>/dev/null'
+                    sh '{ python3 ${TFHOG_DIR}/convert.py --path ${WORKSPACE} --out ${REPORT_TIME} > ${WORKSPACE}/${REPORT_TIME}; } 2>/dev/null'
                     sh '{ cat ${REPORT_TIME}; } 2>/dev/null'
                     
                     ISSUE_COUNT = sh(
@@ -112,7 +119,7 @@ pipeline {
         }
         stage('Upload Logs to GCS') {
             steps {
-               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '/tmp/workspace/pi-rnd-backend-pipeline-security/*'])
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '${REPORT_TIME}.pdf'])
             }
         }
         stage('Compile') {
