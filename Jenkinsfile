@@ -93,7 +93,12 @@ pipeline {
                 }
             }
         }
-        
+        stage('Gitleaks'){
+            steps{
+                echo '[*] Running Gitleaks ...'
+                sh "{ ${GITLEAKS_DIR}/bin/gitleaks -p ${WORKSPACE} --config-path=${GITLEAKS_DIR}/gitleaks.toml --no-git -v -q > gitleaks-report.json; } 2>/dev/null"
+            }
+        }
         stage('Create Reporting'){
             steps{
                 echo '[*] Create report ...'
