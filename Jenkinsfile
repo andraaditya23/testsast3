@@ -114,7 +114,7 @@ pipeline {
         }
         stage('Upload Logs to GCS') {
             steps {
-               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: 'RND ${NAME}/${REPORT_TIME}.pdf'])
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '${REPORT_TIME}.pdf'])
             }
         }
         stage('Compile') {
