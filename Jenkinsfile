@@ -105,7 +105,14 @@ pipeline {
                 }
             }
         }
-        
+        stage('Gitleaks'){
+            steps{
+                echo '[*] Running Gitleaks ...'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                    sh "${GITLEAKS_DIR}/bin/gitleaks -p ${WORKSPACE} --config-path=${GITLEAKS_DIR}/gitleaks.toml --no-git -v -q > logs/gitleaks-report.json"
+                }
+            }
+        }
         stage('Create Reporting'){
             steps{
                 echo '[*] Create report ...'
@@ -113,7 +120,7 @@ pipeline {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
 
-                    sh '{ python3 ${TFHOG_DIR}/convert.py --path logs/ --out ${REPORT_TIME} > ${WORKSPACE}/${REPORT_TIME}; } 2>/dev/null'
+                    sh 'python3 ${TFHOG_DIR}/convert.py --path logs/ --out ${REPORT_TIME} > ${WORKSPACE}/${REPORT_TIME}'
                     sh '{ cat ${REPORT_TIME}; } 2>/dev/null'
                     
                     ISSUE_COUNT = sh(
@@ -123,7 +130,7 @@ pipeline {
                     echo "[*] Total Issue : ${ISSUE_COUNT}"
 
 
-                    sh '{ python3 ${TFHOG_DIR}/create_log.py --out ${REPORT_TIME}; } 2>/dev/null'
+                    sh 'python3 ${TFHOG_DIR}/create_log.py --out ${REPORT_TIME}'
                     echo '[*] Remove files and dirs ...'
                     sh 'rm -r logs/'
                 }               
