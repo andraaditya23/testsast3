@@ -142,18 +142,16 @@ pipeline {
                 echo '[*] Combine all log report ...'
                 sh '{ python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"; } 2>/dev/null'
                 
-                sh 'mv ${REPORT_TIME_EDITED}.pdf "${REPORT_TIME}"'
-                sh 'mv ${REPORT_TIME_EDITED}.json "${REPORT_TIME}"'
-                sh 'ls -l "${REPORT_TIME}/"'
-                sh 'rm -r logs/'
-                sh 'rm ${REPORT_TIME_EDITED}'
+                sh '{ mv ${REPORT_TIME_EDITED}.pdf "${REPORT_TIME}"; } 2>/dev/null'
+                sh '{ mv ${REPORT_TIME_EDITED}.json "${REPORT_TIME}"; } 2>/dev/null'
+                sh '{ rm -r logs;} 2>/dev/null'
+                sh '{ rm ${REPORT_TIME_EDITED}; } 2>/dev/null'
             }
         }
         stage('Upload Logs to GCS') {
             steps {
-                sh 'ls -l "${REPORT_TIME}/"'
-               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '${REPORT_TIME}'])
-               sh 'rm -r "${REPORT_TIME}/"'
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '"${REPORT_TIME}/"*'])
+               sh '{ rm -r "${REPORT_TIME}/"; } 2>/dev/null'
             }
         }
         stage('Compile') {
