@@ -133,7 +133,7 @@ pipeline {
                     echo "[*] Total Issue : ${ISSUE_COUNT}"
 
 
-                    sh 'python3 ${TFHOG_DIR}/create_log.py --out ${REPORT_TIME}'
+                    sh 'python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"'
                     echo '[*] Remove files and dirs ...'
                     sh 'rm -r logs/'
                 }               
