@@ -75,6 +75,14 @@ pipeline {
                 }
             }
         }
+        stage('Gitleaks'){
+            steps{
+                echo '[*] Running Gitleaks ...'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                    sh "${GITLEAKS_DIR}/bin/gitleaks -p . --no-git -v -q > logs/gitleaks-report.json"
+                }
+            }
+        }
         stage('GoLangCI-Lint'){
             steps{
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
@@ -103,14 +111,6 @@ pipeline {
                     withSonarQubeEnv() {
                         sh "{ ${scannerHome}/bin/sonar-scanner; } 2>/dev/null"
                     }                    
-                }
-            }
-        }
-        stage('Gitleaks'){
-            steps{
-                echo '[*] Running Gitleaks ...'
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    sh "${GITLEAKS_DIR}/bin/gitleaks -p . --no-git -v -q > logs/gitleaks-report.json"
                 }
             }
         }
