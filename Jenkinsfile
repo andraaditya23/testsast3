@@ -43,10 +43,13 @@ pipeline {
                 }
             }
         }
-        stage('Installing Library'){
+        stage('Preparing Workspace'){
             steps{
                 echo "[*] Install Git .."
                 sh '{ pip3 install gitpython; } 2>/dev/null'
+
+                echo "[*] Create logs directory ..."
+                sh '{ mkdir logs; } 2>/dev/null'
             }
         }
         stage('Declarative Variable'){
@@ -68,7 +71,7 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                     sh "{ export PATH=$PATH:/usr/local/go/bin; } 2>/dev/null"
                     echo "[*] Running Linter"
-                    sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > golangci-report.json; } 2>/dev/null"
+                    sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > logs/golangci-report.json; } 2>/dev/null"
                             
                 }  
             }
@@ -78,7 +81,7 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                     echo "[*] Running truffleHog ...."
                     withCredentials([gitUsernamePassword(credentialsId:'gitlab-pipeline-bot',gitToolName: 'git-tool')]) {
-                        sh "{ ${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > tfhog-report.json; } 2>/dev/null"
+                        sh "{ ${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > logs/tfhog-report.json; } 2>/dev/null"
     }
 
                     echo "${currentStage.result}" 
@@ -99,7 +102,7 @@ pipeline {
         stage('Gitleaks'){
             steps{
                 echo '[*] Running Gitleaks ...'
-                sh "{ ${GITLEAKS_DIR}/bin/gitleaks -p ${WORKSPACE} --config-path=${GITLEAKS_DIR}/gitleaks.toml --no-git -v -q > gitleaks-report.json; } 2>/dev/null"
+                sh "{ ${GITLEAKS_DIR}/bin/gitleaks -p ${WORKSPACE} --config-path=${GITLEAKS_DIR}/gitleaks.toml --no-git -v -q > logs/gitleaks-report.json; } 2>/dev/null"
             }
         }
         stage('Create Reporting'){
@@ -109,7 +112,7 @@ pipeline {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
 
-                    sh '{ python3 ${TFHOG_DIR}/convert.py --path ${WORKSPACE} --out ${REPORT_TIME} > ${WORKSPACE}/${REPORT_TIME}; } 2>/dev/null'
+                    sh '{ python3 ${TFHOG_DIR}/convert.py --path logs/ --out ${REPORT_TIME} > ${WORKSPACE}/${REPORT_TIME}; } 2>/dev/null'
                     sh '{ cat ${REPORT_TIME}; } 2>/dev/null'
                     
                     ISSUE_COUNT = sh(
@@ -117,6 +120,11 @@ pipeline {
                         returnStdout: true
                     ).trim().toString()
                     echo "[*] Total Issue : ${ISSUE_COUNT}"
+
+
+                    sh '{ python3 ${TFHOG_DIR}/create_log.py --out ${REPORT_TIME} > ${WORKSPACE}/${REPORT_TIME}; } 2>/dev/null'
+                    echo '[*] Remove files and dirs ...'
+                    sh 'rm -r logs/'
                 }               
             }
         }
