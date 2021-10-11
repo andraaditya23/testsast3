@@ -123,10 +123,16 @@ pipeline {
                 script {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
-                    
-                    sh 'python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}"'
+
+                    env.REPORT_TIME_EDITED = (env.REPORT_TIME).replace(' ', '_')
+                    echo '${REPORT_TIME_EDITED}'                    
+
+                    sh 'python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}" > ${REPORT_TIME_EDITED}'
                     sh '{ cat ${REPORT_TIME_EDITED}; } 2>/dev/null'
                     sh 'ls -l'
+
+
+
                     ISSUE_COUNT = sh(
                         script: "grep -o 'Found IssuE' '${REPORT_TIME_EDITED}' | wc -l",
                         returnStdout: true
