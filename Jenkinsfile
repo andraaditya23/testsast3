@@ -121,6 +121,9 @@ pipeline {
                 sh 'ls -l logs/'
                 echo '[*] Create report ...'
                 script {
+                    def now = new Date()
+                    env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
+
                     
 
                     sh 'python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"'
