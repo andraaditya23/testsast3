@@ -69,8 +69,7 @@ pipeline {
                     sh "{ export PATH=$PATH:/usr/local/go/bin; } 2>/dev/null"
                     echo "[*] Running Linter"
                     sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > golangci-report.json; } 2>/dev/null"
-                
-                    echo "${currentStage.result}"             
+                            
                 }  
             }
         }
@@ -81,6 +80,8 @@ pipeline {
                     withCredentials([gitUsernamePassword(credentialsId:'gitlab-pipeline-bot',gitToolName: 'git-tool')]) {
                         sh "{ ${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > tfhog-report.json; } 2>/dev/null"
     }
+
+                    echo "${currentStage.result}" 
                 }
                     
             }
