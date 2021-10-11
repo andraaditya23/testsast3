@@ -149,7 +149,7 @@ pipeline {
         }
         stage('Upload Logs to GCS') {
             steps {
-               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pathPrefix: "${env.JOB_NAME}/" pattern: "${env.REPORT_TIME}/*"])
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pathPrefix: "${env.JOB_NAME}/", pattern: "${env.REPORT_TIME}/*"])
                sh '{ rm -r "${REPORT_TIME}/"; } 2>/dev/null'
             }
         }
