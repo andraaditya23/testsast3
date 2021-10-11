@@ -45,7 +45,7 @@ pipeline {
         }
         stage('Preparing Workspace'){
             steps{
-                echo "[*] Install Git .."
+                echo "[*] Install Git ..."
                 sh '{ pip3 install gitpython; } 2>/dev/null'
 
                 echo "[*] Create logs directory ..."
