@@ -123,6 +123,7 @@ pipeline {
                     env.REPORT_TIME_EDITED = (env.REPORT_TIME).replace(' ', '_')                   
 
                     try{
+                        sh '{ mkdir "${env.JOB_NAME}"; } 2>/dev/null'
                         sh '{ mkdir "${REPORT_TIME}"; } 2>/dev/null'
                     }catch(err){
 
@@ -143,6 +144,7 @@ pipeline {
                 
                 sh '{ mv ${REPORT_TIME_EDITED}.pdf "${REPORT_TIME}"; } 2>/dev/null'
                 sh '{ mv ${REPORT_TIME_EDITED}.json "${REPORT_TIME}"; } 2>/dev/null'
+                sh '{ mv "${REPORT_TIME}" "${env.JOB_NAME}"; } 2>/dev/null'
                 sh '{ rm -r logs;} 2>/dev/null'
                 sh '{ rm ${REPORT_TIME_EDITED}; } 2>/dev/null'
             }
@@ -150,7 +152,7 @@ pipeline {
         stage('Upload Logs to GCS') {
             steps {
                step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: "${env.JOB_NAME}/${env.REPORT_TIME}/*"])
-               sh '{ rm -r "${REPORT_TIME}/"; } 2>/dev/null'
+               sh '{ rm -r "${env.JOB_NAME}/"; } 2>/dev/null'
             }
         }
         stage('Compile') {
