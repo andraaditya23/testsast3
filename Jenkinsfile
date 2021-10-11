@@ -105,14 +105,7 @@ pipeline {
                 }
             }
         }
-        stage('Gitleaks'){
-            steps{
-                echo '[*] Running Gitleaks ...'
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    sh "${GITLEAKS_DIR}/bin/gitleaks -p ${WORKSPACE} --config-path=${GITLEAKS_DIR}/gitleaks.toml --no-git -v -q > logs/gitleaks-report.json"
-                }
-            }
-        }
+        
         stage('Create Reporting'){
             steps{
                 echo '[*] Create report ...'
