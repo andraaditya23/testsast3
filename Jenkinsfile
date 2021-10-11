@@ -119,15 +119,15 @@ pipeline {
             steps{
                 echo '[*] Create report ...'
                 script {
-                    try{
-                        sh '{ mkdir GCS; } 2>/dev/null'
-                    }catch(err){
-
-                    }
-
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
                     env.REPORT_TIME_EDITED = (env.REPORT_TIME).replace(' ', '_')                   
+
+                    try{
+                        sh '{ mkdir "${REPORT_TIME"}; } 2>/dev/null'
+                    }catch(err){
+
+                    }
 
                     sh '{ python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}" > ${REPORT_TIME_EDITED}; } 2>/dev/null'
                     sh '{ cat ${REPORT_TIME_EDITED}; } 2>/dev/null'
@@ -142,8 +142,8 @@ pipeline {
                 echo '[*] Combine all log report ...'
                 sh '{ python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"; } 2>/dev/null'
                 
-                sh 'mv ${REPORT_TIME_EDITED}.pdf GCS/'
-                sh 'mv ${REPORT_TIME_EDITED}.json GCS/'
+                sh 'mv ${REPORT_TIME_EDITED}.pdf "${REPORT_TIME}"'
+                sh 'mv ${REPORT_TIME_EDITED}.json "${REPORT_TIME}"'
 
                 sh 'rm -r logs/'
                 sh 'rm ${REPORT_TIME_EDITED}'
@@ -151,8 +151,8 @@ pipeline {
         }
         stage('Upload Logs to GCS') {
             steps {
-               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: 'GCS/*'])
-               sh 'rm -r GCS/'
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '"${REPORT_TIME}"/*'])
+               sh 'rm -r "${REPORT_TIME}"'
             }
         }
         stage('Compile') {
