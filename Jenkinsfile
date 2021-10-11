@@ -144,7 +144,7 @@ pipeline {
                 
                 sh '{ mv ${REPORT_TIME_EDITED}.pdf "${REPORT_TIME}"; } 2>/dev/null'
                 sh '{ mv ${REPORT_TIME_EDITED}.json "${REPORT_TIME}"; } 2>/dev/null'
-                sh '{ mv "${REPORT_TIME}" "${env.JOB_NAME}"; } 2>/dev/null'
+                sh '{ mv "${REPORT_TIME}" "${env.JOB_NAME}/"; } 2>/dev/null'
                 sh '{ rm -r logs;} 2>/dev/null'
                 sh '{ rm ${REPORT_TIME_EDITED}; } 2>/dev/null'
             }
