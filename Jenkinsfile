@@ -53,7 +53,6 @@ pipeline {
                 sh '{ pip3 install fpdf; } 2>/dev/null'
 
                 echo "[*] Create logs directory ..."
-                
                 script{
                     try{
                         sh '{ mkdir logs; } 2>/dev/null'
@@ -118,36 +117,42 @@ pipeline {
         }
         stage('Create Reporting'){
             steps{
-                sh 'ls -l logs/'
                 echo '[*] Create report ...'
                 script {
+                    try{
+                        sh '{ mkdir GCS; } 2>/dev/null'
+                    }catch(err){
+
+                    }
+
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
+                    env.REPORT_TIME_EDITED = (env.REPORT_TIME).replace(' ', '_')                   
 
-                    env.REPORT_TIME_EDITED = (env.REPORT_TIME).replace(' ', '_')
-                    echo '${REPORT_TIME_EDITED}'                    
-
-                    sh 'python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}" > ${REPORT_TIME_EDITED}'
+                    sh '{ python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}" > ${REPORT_TIME_EDITED}; } 2>/dev/null'
                     sh '{ cat ${REPORT_TIME_EDITED}; } 2>/dev/null'
-                    sh 'ls -l'
-
-
 
                     ISSUE_COUNT = sh(
-                        script: "grep -o 'Found IssuE' '${REPORT_TIME_EDITED}' | wc -l",
+                        script: "{ grep -o 'Found IssuE' '${REPORT_TIME_EDITED}' | wc -l; } 2>/dev/null",
                         returnStdout: true
                     ).trim().toString()
                     echo "[*] Total Issue : ${ISSUE_COUNT}"
                 }               
 
-                sh 'python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"'
-                echo '[*] Remove files and dirs ...'
+                echo '[*] Combine all log report ...'
+                sh '{ python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}; } 2>/dev/null"'
+                
+                sh 'mv ${REPORT_TIME_EDITED}.pdf GCS/'
+                sh 'mv ${REPORT_TIME_EDITED}.json GCS/'
+
                 sh 'rm -r logs/'
+                sh 'rm ${REPORT_TIME_EDITED}'
             }
         }
         stage('Upload Logs to GCS') {
             steps {
-               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '${REPORT_TIME}.pdf'])
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: 'GCS/*'])
+               sh 'rm -r GCS/'
             }
         }
         stage('Compile') {
