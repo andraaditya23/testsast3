@@ -45,7 +45,7 @@ pipeline {
         }
         stage('Preparing Workspace'){
             steps{
-                sh 'ls -l /usr/local/trufflehog'
+                sh 'cat ${TFHOG_DIR}/truffleHog/truffleHog.py'
                 echo "[*] Install Git ..."
                 sh '{ pip3 install gitpython; } 2>/dev/null'
 
