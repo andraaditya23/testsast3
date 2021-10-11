@@ -127,7 +127,7 @@ pipeline {
                     sh '{ cat ${REPORT_TIME}; } 2>/dev/null'
                     
                     ISSUE_COUNT = sh(
-                        script: "{ grep -o 'Found IssuE' ${REPORT_TIME} | wc -l; } 2>/dev/null",
+                        script: "{ grep -o 'Found IssuE' '${REPORT_TIME}' | wc -l; } 2>/dev/null",
                         returnStdout: true
                     ).trim().toString()
                     echo "[*] Total Issue : ${ISSUE_COUNT}"
