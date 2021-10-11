@@ -45,7 +45,7 @@ pipeline {
         }
         stage('Preparing Workspace'){
             steps{
-                sh 'ls -l /usr/local/bin'
+                sh 'ls -l /usr/local/trufflehog'
                 echo "[*] Install Git ..."
                 sh '{ pip3 install gitpython; } 2>/dev/null'
 
