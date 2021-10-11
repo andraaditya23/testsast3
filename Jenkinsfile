@@ -83,8 +83,6 @@ pipeline {
                     withCredentials([gitUsernamePassword(credentialsId:'gitlab-pipeline-bot',gitToolName: 'git-tool')]) {
                         sh "{ ${TFHOG_DIR}/bin/trufflehog --regex --json --max_depth 1 --rules ${TFHOG_DIR}/rules.json ${TARGET_REPO} > logs/tfhog-report.json; } 2>/dev/null"
     }
-
-                    echo "${currentStage.result}" 
                 }
                     
             }
