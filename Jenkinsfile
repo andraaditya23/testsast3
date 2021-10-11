@@ -81,6 +81,7 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                     sh "${GITLEAKS_DIR}/bin/gitleaks -p . --no-git -v -q > logs/gitleaks-report.json"
                 }
+                sleep 20
             }
         }
         stage('GoLangCI-Lint'){
