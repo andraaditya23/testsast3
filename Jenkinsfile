@@ -124,7 +124,7 @@ pipeline {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
 
-                    sh 'python3 ${TFHOG_DIR}/convert.py --path logs/ --out "${REPORT_TIME}" > ${REPORT_TIME}'
+                    sh 'python3 ${TFHOG_DIR}/convert.py --path logs/ --out "${REPORT_TIME}"'
                     sh '{ cat ${REPORT_TIME}; } 2>/dev/null'
                     
                     ISSUE_COUNT = sh(
