@@ -127,7 +127,7 @@ pipeline {
 
                     echo '${REPORT_TIME_EDITED}'
 
-                    sh 'python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}" > ${REPORT_TIME_EDITED}'
+                    sh 'python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}"'
                     sh '{ cat ${REPORT_TIME_EDITED}; } 2>/dev/null'
                     sh 'ls -l'
                     ISSUE_COUNT = sh(
