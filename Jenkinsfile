@@ -77,15 +77,16 @@ pipeline {
         }
         stage('Gitleaks'){
             steps{
+                sh 'ls -l'
                 echo '[*] Running Gitleaks ...'
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                     sh "${GITLEAKS_DIR}/bin/gitleaks -p . --no-git -v -q > logs/gitleaks-report.json"
                 }
-                sleep 20
             }
         }
         stage('GoLangCI-Lint'){
             steps{
+                sleep 20
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                     sh "{ export PATH=$PATH:/usr/local/go/bin; } 2>/dev/null"
                     echo "[*] Running Linter"
