@@ -45,7 +45,6 @@ pipeline {
         }
         stage('Preparing Workspace'){
             steps{
-                sh 'cat ${TFHOG_DIR}/convert.py'
                 echo "[*] Install Git ..."
                 sh '{ pip3 install gitpython; } 2>/dev/null'
 
@@ -150,7 +149,7 @@ pipeline {
         }
         stage('Upload Logs to GCS') {
             steps {
-               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: "${env.REPORT_TIME}"])
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: "${env.REPORT_TIME}/*"])
                sh '{ rm -r "${REPORT_TIME}/"; } 2>/dev/null'
             }
         }
