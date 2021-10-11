@@ -123,10 +123,7 @@ pipeline {
                 script {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
-                    env.REPORT_TIME_EDITED = ${env.REPORT_TIME}.replace(' ', '_')
-
-                    echo '${REPORT_TIME_EDITED}'
-
+                    
                     sh 'python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}"'
                     sh '{ cat ${REPORT_TIME_EDITED}; } 2>/dev/null'
                     sh 'ls -l'
@@ -135,13 +132,11 @@ pipeline {
                         returnStdout: true
                     ).trim().toString()
                     echo "[*] Total Issue : ${ISSUE_COUNT}"
-
-                    
-
-                    sh 'python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"'
-                    echo '[*] Remove files and dirs ...'
-                    sh 'rm -r logs/'
                 }               
+
+                sh 'python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"'
+                echo '[*] Remove files and dirs ...'
+                sh 'rm -r logs/'
             }
         }
         stage('Upload Logs to GCS') {
