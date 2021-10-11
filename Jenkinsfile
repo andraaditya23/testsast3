@@ -125,7 +125,7 @@ pipeline {
                     try{
                         sh 'mkdir "_${env.JOB_NAME}_"'
                     }catch(err){
-
+                        echo "${err}"
                     }
 
                     sh '{ python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}" > ${REPORT_TIME_EDITED}; } 2>/dev/null'
