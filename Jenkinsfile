@@ -49,6 +49,9 @@ pipeline {
                 echo "[*] Install Git ..."
                 sh '{ pip3 install gitpython; } 2>/dev/null'
 
+                echo "[*] Install FPDF ..."
+                sh '{ pip3 install fpdf; } 2>/dev/null'
+
                 echo "[*] Create logs directory ..."
                 
                 script{
