@@ -49,10 +49,13 @@ pipeline {
                 sh '{ pip3 install gitpython; } 2>/dev/null'
 
                 echo "[*] Create logs directory ..."
-                try{
-                    sh '{ mkdir logs; } 2>/dev/null'
-                }catch{
+                
+                script{
+                    try{
+                        sh '{ mkdir logs; } 2>/dev/null'
+                    }catch(err){
 
+                    }
                 }
             }
         }
