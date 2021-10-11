@@ -140,7 +140,7 @@ pipeline {
                 }               
 
                 echo '[*] Combine all log report ...'
-                sh '{ python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}; } 2>/dev/null"'
+                sh '{ python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"; } 2>/dev/null'
                 
                 sh 'mv ${REPORT_TIME_EDITED}.pdf GCS/'
                 sh 'mv ${REPORT_TIME_EDITED}.json GCS/'
