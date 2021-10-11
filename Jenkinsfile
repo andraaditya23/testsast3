@@ -144,16 +144,16 @@ pipeline {
                 
                 sh 'mv ${REPORT_TIME_EDITED}.pdf "${REPORT_TIME}"'
                 sh 'mv ${REPORT_TIME_EDITED}.json "${REPORT_TIME}"'
-
+                sh 'ls -l "${REPORT_TIME}/"'
                 sh 'rm -r logs/'
                 sh 'rm ${REPORT_TIME_EDITED}'
             }
         }
         stage('Upload Logs to GCS') {
             steps {
-                sh 'ls -l "${REPORT_TIME}"/'
-               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '"${REPORT_TIME}"/*'])
-               sh 'rm -r "${REPORT_TIME}"/'
+                sh 'ls -l "${REPORT_TIME}/"'
+               step([$class: 'ClassicUploadStep', credentialsId: 'pharmalink-id', bucket: "gs://${env.GCS_BUCKET}", pattern: '${REPORT_TIME}'])
+               sh 'rm -r "${REPORT_TIME}/"'
             }
         }
         stage('Compile') {
