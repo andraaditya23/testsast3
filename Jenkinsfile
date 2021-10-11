@@ -70,7 +70,7 @@ pipeline {
                     echo "[*] Running Linter"
                     sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > golangci-report.json; } 2>/dev/null"
                 }  
-                echo "${currentBuild.result}"             
+                echo "${currentBuild.currentResult}"             
             }
         }
         stage('TruffleHog'){
