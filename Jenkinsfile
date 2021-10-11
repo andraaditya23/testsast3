@@ -123,8 +123,7 @@ pipeline {
                     env.REPORT_TIME_EDITED = (env.REPORT_TIME).replace(' ', '_')                   
 
                     try{
-                        sh '{ mkdir "_${env.JOB_NAME}_"; } 2>/dev/null'
-                        sh '{ mkdir "_${env.JOB_NAME}_/${env.REPORT_TIME}"; } 2>/dev/null'
+                        sh 'mkdir "_${env.JOB_NAME}_"'
                     }catch(err){
 
                     }
