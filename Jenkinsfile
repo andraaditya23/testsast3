@@ -123,7 +123,7 @@ pipeline {
                 script {
                     def now = new Date()
                     env.REPORT_TIME = now.format("dd-MM-YYYY HH:mm:ss", TimeZone.getTimeZone('GMT+7'))
-                    env.REPORT_TIME_EDITED = ${REPORT_TIME}.replace(' ', '_')
+                    env.REPORT_TIME_EDITED = ${env.REPORT_TIME}.replace(' ', '_')
 
                     echo '${REPORT_TIME_EDITED}'
 
