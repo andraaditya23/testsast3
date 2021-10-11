@@ -112,7 +112,7 @@ pipeline {
             steps{
                 echo '[*] Running Gitleaks ...'
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    sh "${GITLEAKS_DIR}/bin/gitleaks -p . --no-git -v -q "
+                    sh "${GITLEAKS_DIR}/bin/gitleaks -p . --no-git -v -q > logs/gitleaks-report.json"
                 }
             }
         }
