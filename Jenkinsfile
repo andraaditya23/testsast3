@@ -49,7 +49,11 @@ pipeline {
                 sh '{ pip3 install gitpython; } 2>/dev/null'
 
                 echo "[*] Create logs directory ..."
-                sh '{ mkdir logs; } 2>/dev/null'
+                try{
+                    sh '{ mkdir logs; } 2>/dev/null'
+                }catch{
+
+                }
             }
         }
         stage('Declarative Variable'){
