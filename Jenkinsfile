@@ -40,6 +40,8 @@ pipeline {
                 script{
                     def GIT = checkout scm
                     env.TARGET_REPO = GIT.GIT_URL
+                    env.REPO_NAME = (env.TARGET_REPO).split('/')
+                    echo '${REPO_NAME}'
                 }
             }
         }
@@ -77,14 +79,12 @@ pipeline {
         }
         stage('Gitleaks'){
             steps{
-                script{
-                    def acc_token = tool 'git-tool';
-                    echo "${acc_token}"
-                    echo '[*] Running Gitleaks ...'
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                        sh "${GITLEAKS_DIR}/bin/gitleaks --access-token=${acc_token} --repo-url=${TARGET_REPO} --no-git -v -q > logs/gitleaks-report.json"   
-                    }
-                }
+                echo '[*] Clone repo ...'
+                
+                echo '[*] Running Gitleaks ...'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                    sh "${GITLEAKS_DIR}/bin/gitleaks --access-token=${acc_token} --repo-url=${TARGET_REPO} --no-git -v -q > logs/gitleaks-report.json"   
+                }               
             }
         }
         stage('GoLangCI-Lint'){
