@@ -77,10 +77,11 @@ pipeline {
         }
         stage('Gitleaks'){
             steps{
-                sh 'ls -l'
                 echo '[*] Running Gitleaks ...'
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    sh "${GITLEAKS_DIR}/bin/gitleaks -p . --no-git -v -q > logs/gitleaks-report.json"
+                    withCredentials([gitUsernamePassword(credentialsId:'gitlab-pipeline-bot',gitToolName: 'git-tool')]){
+                    sh "${GITLEAKS_DIR}/bin/gitleaks --repo-url=${TARGET_REPO} --no-git -v -q > logs/gitleaks-report.json"
+                    }
                 }
             }
         }
