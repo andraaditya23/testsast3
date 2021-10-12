@@ -77,17 +77,17 @@ pipeline {
         }
         stage('Gitleaks'){
             steps{
-                echo '[*] Running Gitleaks ...'
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    withCredentials([gitUsernamePassword(credentialsId:'gitlab-pipeline-bot',gitToolName: 'git-tool')]){
-                    sh "${GITLEAKS_DIR}/bin/gitleaks --repo-url=${TARGET_REPO} --no-git -v -q > logs/gitleaks-report.json"
+                script{
+                    def acc_token = credentials('gitlab-pipeline-bot')
+                    echo '[*] Running Gitleaks ...'
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                        sh "${GITLEAKS_DIR}/bin/gitleaks --access-token=${acc_token} --repo-url=${TARGET_REPO} --no-git -v -q > logs/gitleaks-report.json"   
                     }
                 }
             }
         }
         stage('GoLangCI-Lint'){
             steps{
-                sleep 20
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                     sh "{ export PATH=$PATH:/usr/local/go/bin; } 2>/dev/null"
                     echo "[*] Running Linter"
