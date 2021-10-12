@@ -40,8 +40,6 @@ pipeline {
                 script{
                     def GIT = checkout scm
                     env.TARGET_REPO = GIT.GIT_URL
-                    env.REPO_NAME = (env.TARGET_REPO).split('/')
-                    echo '${REPO_NAME}'
                 }
             }
         }
@@ -80,10 +78,12 @@ pipeline {
         stage('Gitleaks'){
             steps{
                 echo '[*] Clone repo ...'
-                
+                withCredentials([gitUsernamePassword(credentialsId:'gitlab-pipeline-bot',gitToolName: 'git-tool')]){
+                    sh 'git clone ${TARGET_REPO}'
+                }
                 echo '[*] Running Gitleaks ...'
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    sh "${GITLEAKS_DIR}/bin/gitleaks --access-token=${acc_token} --repo-url=${TARGET_REPO} --no-git -v -q > logs/gitleaks-report.json"   
+                    sh "${GITLEAKS_DIR}/bin/gitleaks -p ${TARGET_REPO} --no-git -v -q > logs/gitleaks-report.json"   
                 }               
             }
         }
