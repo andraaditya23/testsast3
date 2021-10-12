@@ -79,18 +79,18 @@ pipeline {
             steps{
                 echo '[*] Clone repo ...'
                 withCredentials([gitUsernamePassword(credentialsId:'gitlab-pipeline-bot',gitToolName: 'git-tool')]){
-                    sh 'git clone ${TARGET_REPO}'
+                    sh '{ git clone ${TARGET_REPO}; } 2>/dev/null'
                 }
                 echo '[*] Running Gitleaks ...'
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    sh "${GITLEAKS_DIR}/bin/gitleaks -p ${TARGET_REPO} --no-git -v -q > logs/gitleaks-report.json"   
-                }               
+                    sh "{ ${GITLEAKS_DIR}/bin/gitleaks -p ${NAME} --no-git -v -q > logs/gitleaks-report.json; } 2>/dev/null"   
+                }
+                sh '{ rm -r ${NAME}; } 2>/dev/null'               
             }
         }
         stage('GoLangCI-Lint'){
             steps{
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    sh "{ export PATH=$PATH:/usr/local/go/bin; } 2>/dev/null"
                     echo "[*] Running Linter"
                     sh "{ ${GOLANGCI_DIR}/bin/golangci-lint run -c./.golangci.yaml --out-format json --new-from-rev=HEAD~ > logs/golangci-report.json; } 2>/dev/null"
                             
@@ -127,9 +127,8 @@ pipeline {
                     env.REPORT_TIME_EDITED = (env.REPORT_TIME).replace(' ', '_')                   
 
                     try{
-                        sh 'mkdir "${REPORT_TIME}"'
+                        sh '{ mkdir "${REPORT_TIME}"; } 2>/dev/null'
                     }catch(err){
-                        echo "${err}"
                     }
 
                     sh '{ python3 ${TFHOG_DIR}/convert.py --path logs --out "${REPORT_TIME}" > ${REPORT_TIME_EDITED}; } 2>/dev/null'
@@ -144,9 +143,10 @@ pipeline {
 
                 echo '[*] Combine all log report ...'
                 sh '{ python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"; } 2>/dev/null'
-                sh 'ls -l'
+
                 sh '{ mv ${REPORT_TIME_EDITED}.pdf "${REPORT_TIME}"; } 2>/dev/null'
                 sh '{ mv ${REPORT_TIME_EDITED}.json "${REPORT_TIME}"; } 2>/dev/null'
+
                 sh '{ rm -r logs;} 2>/dev/null'
                 sh '{ rm ${REPORT_TIME_EDITED}; } 2>/dev/null'
             }
