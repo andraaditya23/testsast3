@@ -79,6 +79,7 @@ pipeline {
             steps{
                 script{
                     def acc_token = credentials('gitlab-pipeline-bot')
+                    echo "${acc_token}"
                     echo '[*] Running Gitleaks ...'
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                         sh "${GITLEAKS_DIR}/bin/gitleaks --access-token=${acc_token} --repo-url=${TARGET_REPO} --no-git -v -q > logs/gitleaks-report.json"   
