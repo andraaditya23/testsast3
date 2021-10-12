@@ -78,7 +78,7 @@ pipeline {
         stage('Gitleaks'){
             steps{
                 script{
-                    def acc_token = credentials('gitlab-pipeline-bot')
+                    def acc_token = tool 'git-tool';
                     echo "${acc_token}"
                     echo '[*] Running Gitleaks ...'
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
