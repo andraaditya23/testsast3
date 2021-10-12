@@ -142,7 +142,7 @@ pipeline {
                 }               
 
                 echo '[*] Combine all log report ...'
-                sh '{ python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}"; } 2>/dev/null'
+                sh '{ python3 ${TFHOG_DIR}/create_log.py --out "${REPORT_TIME}" > /dev/null; } 2>/dev/null'
 
                 sh '{ mv ${REPORT_TIME_EDITED}.pdf "${REPORT_TIME}"; } 2>/dev/null'
                 sh '{ mv ${REPORT_TIME_EDITED}.json "${REPORT_TIME}"; } 2>/dev/null'
@@ -216,7 +216,7 @@ pipeline {
                     title: "${env.JOB_NAME} #${env.BUILD_NUMBER}\n>> click for details ...", 
                     webhookURL: "${env.DISCORD_WEBHOOK_URL}", 
                     description:"```yaml\nTimestamp  : ${REPORT_TIME}\nAuthor     : ${AUTHOR}\nIssue      : ${ISSUE_COUNT}\n```SonarQube  : [here](http://34.126.163.106:9000/dashboard?id=research-test)"
-                    sh "exit 0"
+                    
                 }
             }
         }
