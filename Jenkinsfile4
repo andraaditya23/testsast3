@@ -32,7 +32,7 @@ pipeline {
                 script{
                     sh "echo $PATH"
                 try{
-                    echo "[*] Running Linter Gosec ...."
+                    echo "[*] Running Linter Gosec ....."
                     sh "golangci-lint run --disable-all -E gosec"
                 }catch(err){}
                 try{
