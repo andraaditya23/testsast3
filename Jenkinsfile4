@@ -36,7 +36,7 @@ pipeline {
                     sh "golangci-lint run --disable-all -E gosec"
                 }catch(err){}
                 try{
-                    echo "[*] Running Linter Deadcode ..."
+                    echo "[*] Running Linter Deadcode ...."
                     sh "golangci-lint run --disable-all -E deadcode"
                 }catch(err){}
                 try{
