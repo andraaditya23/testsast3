@@ -48,7 +48,7 @@ pipeline {
                     sh "golangci-lint run --disable-all -E unused"
                 }catch(err){}
                 try{
-                    echo "[*] Running Linter ErrCheck"
+                    echo "[*] Running Linter ErrCheck, TestTrigger"
                     sh "golangci-lint run --disable-all -E errcheck"
                 }catch(err){
                     echo "${err}"               }
