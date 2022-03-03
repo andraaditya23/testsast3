@@ -108,10 +108,12 @@ pipeline {
                     
             }
         }
-        stage('Security') {
+        stage('Horusec') {
             steps {
-                sh 'curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest'
-                sh 'horusec start -p="./" -e="true"'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                    sh 'curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest'
+                    sh 'horusec start -p="./" -e="true"'
+                }
             }
         }
         stage('SonarQube Analysis') {
