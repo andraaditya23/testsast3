@@ -44,7 +44,5 @@ pipeline {
 				echo "test trigger"
 			}
 		}
-			}
-		}
 	}
 }
