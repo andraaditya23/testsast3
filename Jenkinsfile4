@@ -32,14 +32,18 @@ pipeline {
 				checkout scm
 			}
 		}
-		stage('Sonarqube') {
-    	    steps{
-				script{
-					def scannerHome = tool 'SonarQubeScanner';
-					withSonarQubeEnv(){
-						sh "${scannerHome}/bin/sonar-scanner"
-					}
-				}
+		stage ("Python Bandit Security Scan"){
+			steps{
+				sh "bandit --exit-zero -r ."
+			}
+		}
+		stage ("Dependency Check with Python Safety"){
+			steps{
+				sh "safety check -r requirements.txt"
+// 				sh "safety check --json > report.json"
+				echo "test trigger"
+			}
+		}
 			}
 		}
 	}
