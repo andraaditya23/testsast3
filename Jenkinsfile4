@@ -32,18 +32,6 @@ pipeline {
 				checkout scm
 			}
 		}
-		stage ("Python Bandit Security Scan"){
-			steps{
-				sh "bandit --exit-zero -r ."
-			}
-		}
-		stage ("Dependency Check with Python Safety"){
-			steps{
-				sh "safety check -r go.mod"
-// 				sh "safety check --json > report.json"
-				echo "test trigger"
-			}
-		}
 		stage (" Snyk Scanner"){
 			steps{
 				echo "Snyk Scanner"
